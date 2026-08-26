@@ -18,7 +18,9 @@ public final class com/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy : ja
 }
 
 public final class com/ibabyblue/amedia/core/AMediaCachePolicy : java/lang/Enum {
+	public static final field CacheOnly Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
 	public static final field None Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public static final field ReadOnly Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
 	public static final field ReadThrough Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCachePolicy;

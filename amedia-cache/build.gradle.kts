@@ -9,6 +9,7 @@ android {
     defaultConfig {
         minSdk = 23
         consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -24,6 +25,10 @@ dependencies {
     implementation(libs.androidx.media3.database)
     implementation(libs.androidx.media3.datasource)
     implementation(libs.androidx.media3.exoplayer)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 }
 
 apply(from = rootProject.file("gradle/publishing.gradle.kts"))

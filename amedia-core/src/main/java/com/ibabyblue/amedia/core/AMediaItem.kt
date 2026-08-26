@@ -45,8 +45,17 @@ public data class AMediaHttpConfiguration(
 )
 
 public enum class AMediaCachePolicy {
+    /** Bypass AMedia's disk cache completely. */
     None,
+
+    /** Read cached bytes when present, fetch misses from upstream, and do not write new bytes. */
+    ReadOnly,
+
+    /** Read cached bytes and write upstream misses into the cache. */
     ReadThrough,
+
+    /** Read only from the cache and fail playback if required bytes are missing. */
+    CacheOnly,
 }
 
 public data class AMediaSubtitle(

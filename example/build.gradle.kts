@@ -26,7 +26,7 @@ kotlin { jvmToolchain(17) }
 dependencies {
     implementation(project(":amedia"))
     implementation(project(":amedia-compose-material3"))
-    implementation(project(":amedia-feed"))
+    implementation(project(":amedia-preload"))
     implementation(project(":amedia-cache"))
     implementation(project(":amedia-session"))
     implementation(libs.androidx.activity.compose)

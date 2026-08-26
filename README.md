@@ -11,8 +11,9 @@ artifacts as `0.1.0-SNAPSHOT`.
 - One controller contract for audio, video, queues, tracks, subtitles, DRM, clipping, and seeking.
 - Compose-native video output through Media3 `ContentFrame`; no `PlayerView` wrapped in
   `AndroidView`.
-- One-player short-video feed coordination with settled-page activation and Media3 preloading.
-- Optional per-item read-through cache instead of forcing every item through a cache.
+- One-player ordered-media preloading for audio, video, or mixed media without screen or business
+  assumptions.
+- Optional per-item bypass, read-only, read-through, and cache-only disk policies.
 - Optional MediaSession service for background audio, system controls, notification customization,
   and playback resumption.
 - Explicit ownership: every factory-created controller is released by its owner, while supplied
@@ -35,11 +36,11 @@ artifacts as `0.1.0-SNAPSHOT`.
 | `amedia-core` | Models, `AMediaController`, Media3 playback, retry, HTTP headers, tracks and events |
 | `amedia-compose` | Unstyled `AMediaVideo`, controller ownership and lifecycle binding |
 | `amedia-compose-material3` | Optional accessible Material 3 controls |
-| `amedia-feed` | One-player vertical-feed coordination and bounded preloading |
-| `amedia-cache` | Optional per-item read-through streaming cache |
+| `amedia-preload` | Business-agnostic ordered-media playback and bounded preloading |
+| `amedia-cache` | Optional streaming cache, LRU eviction, inspection, and explicit maintenance |
 | `amedia-session` | Background playback, MediaSession, notification hooks and resumption |
 | `amedia` | Convenience dependency for core plus unstyled Compose playback |
-| `example` | Runnable foreground, feed, cache, subtitle, PiP and Session examples |
+| `example` | Runnable foreground, preload, cache, subtitle, PiP and Session examples |
 
 ## Local installation
 
@@ -57,10 +58,11 @@ repositories {
 dependencies {
     implementation("io.github.ibabyblue:amedia:0.1.0-SNAPSHOT")
     implementation("io.github.ibabyblue:amedia-compose-material3:0.1.0-SNAPSHOT")
+    implementation("io.github.ibabyblue:amedia-preload:0.1.0-SNAPSHOT")
 }
 ```
 
-Use only the feature artifacts you need. `amedia` intentionally does not pull in cache, feed,
+Use only the feature artifacts you need. `amedia` intentionally does not pull in cache, preload,
 Material 3, or Session support.
 
 ## Foreground Compose player
@@ -93,30 +95,29 @@ Commands are serialized onto the Media3 application looper and return an immedia
 `AMediaCommandResult`. Observe `state`, `progress`, and `events` for authoritative asynchronous
 results. Network errors retry twice by default with bounded exponential backoff.
 
-## Short-video feed
+## Audio and video preloading
 
-Create one feed controller for one feed screen and submit video entries only. Image pages remain
-owned by the host UI.
+`AMediaPreloadSession` owns one player and its matching Media3 preload manager. Its ordered entries
+may contain audio, video, or both. The application decides how pages, carousels, playlists, and
+business models map to entry IDs.
 
 ```kotlin
-val feed = rememberAMediaFeedController()
-LaunchedEffect(entries) { feed.submit(entries) }
+val cache = AMediaCacheFactory.create(context)
+val session = AMediaPreloadSessionFactory.create(context, cache)
 
-AMediaFeedPagerBinding(
-    controller = feed,
-    pagerState = pagerState,
-    entryIndexForPage = { page -> videoEntryIndexByPage[page] }, // null for an image page
-)
+session.update(entries)
+session.hint(entries.getOrNull(expectedIndex)?.entryId)
+session.play(entries[currentIndex].entryId)
 
-if (feedState.activeIndex == entryIndex) {
-    AMediaVideo(feed.playback, Modifier.fillMaxSize(), contentScale = AMediaContentScale.Crop)
-}
+// The owner releases in its lifecycle scope.
+session.release()
+cache.close()
 ```
 
-Activation follows `PagerState.settledPage`, so a swipe never starts two videos. The default policy
-loads 3 seconds ahead, 1 second behind, selects tracks within distance 2, retains 50 playback
-positions, and preloads only on an unmetered network. `Always` and `Never` network policies are
-available explicitly.
+The default technical budget loads 3 seconds forward, 1 second backward, selects tracks within
+distance 2, and caps total preload buffers at 32 MiB. `hint` only reprioritizes work; `play` switches
+the shared player to the preloaded source. The application owns pagination, network/data-saver
+rules, active-page selection, and playback-position persistence.
 
 ## Optional cache
 
@@ -136,8 +137,79 @@ cache.close()
 ```
 
 The default cache is a 256 MiB LRU. The same directory is shared safely inside the process through
-reference counting. An item with `AMediaCachePolicy.None` bypasses the cache. Pause or release
-controllers that may be writing before calling `remove` or `clear`.
+reference counting. Per-item policies are:
+
+- `None`: bypass the cache.
+- `ReadOnly`: read hits, fetch misses, and do not write new bytes.
+- `ReadThrough`: read hits and write upstream misses.
+- `CacheOnly`: fail when required bytes are absent.
+
+Automatic LRU eviction keeps the cache below `AMediaCacheConfiguration.maxBytes`. Applications can
+also inspect `keys`, query `cachedBytes`, remove a resource, clear everything, clear spans older than
+a cutoff, or trim immediately to a smaller size:
+
+```kotlin
+cache.remove(item)
+cache.remove(listOf("message-audio:1", "message-audio:2"))
+cache.clear(AMediaCacheClearPolicy.OlderThan(cutoffEpochMillis))
+cache.clear(AMediaCacheClearPolicy.TrimToBytes(128L * 1024L * 1024L))
+```
+
+For isolated audio, video, account, or product caches under one global LRU budget, open logical
+spaces from one manager. Equal public cache keys never collide across spaces, while the backing
+store still has one automatic capacity limit:
+
+```kotlin
+val manager = AMediaCacheManagerFactory.create(
+    context,
+    AMediaCacheConfiguration(maxBytes = 512L * 1024L * 1024L),
+)
+val audioCache = manager.open(AMediaCacheSpace.Named("audio"))
+val videoCache = manager.open(AMediaCacheSpace.Named("video"))
+
+val snapshot = manager.snapshot()
+manager.clear(
+    scope = AMediaCacheScope.Spaces(setOf(AMediaCacheSpace.Named("audio"))),
+    policy = AMediaCacheClearPolicy.OlderThan(cutoffEpochMillis),
+)
+
+audioCache.close()
+videoCache.close()
+manager.close()
+```
+
+Create managers with different `directoryName` values only when physical stores are required. Each
+physical store has its own global capacity. `AMediaCacheFactory` remains the convenient,
+backwards-compatible default-space factory.
+
+For conversation audio, model each conversation as a logical space and each message as a stable
+resource key. Space names accept only 1-64 ASCII letters, digits, `.`, `_`, or `-`, so hash or encode
+untrusted IDs instead of using them directly:
+
+```kotlin
+val dialogueSpace = AMediaCacheSpace.Named("dialogue-${stableHash(dialogueId)}")
+val dialogueCache = manager.open(dialogueSpace)
+val audioItem = AMediaItem(
+    mediaId = messageId,
+    uri = Uri.parse(mp3Url),
+    metadata = AMediaMetadata(contentType = AMediaContentType.Speech),
+    http = AMediaHttpConfiguration(cacheKey = "message-audio:$messageId"),
+    cachePolicy = AMediaCachePolicy.ReadThrough,
+)
+
+// Playback and preloading use dialogueCache. To delete the whole conversation later:
+manager.clear(AMediaCacheScope.Spaces(setOf(dialogueSpace)))
+```
+
+A logical space is encoded into Media3 cache keys; it is not a `dialogueId` subdirectory and cached
+media is stored as opaque spans rather than original `.mp3` files. Do not delete files or
+subdirectories inside `cache.directory` while AMedia owns the store. Pause or release writers, then
+use `dialogueCache.clear()`, manager-scoped `clear`, or `remove(cacheKey)`. If complete physical
+separation is required, use a distinct `directoryName`; deleting that store is only safe after all
+of its managers, caches, controllers, and preload sessions have been closed.
+
+Maintenance is synchronous; run large operations away from the main thread. Pause or release
+controllers and preload sessions that may be writing before removing spans.
 
 ## Background playback
 

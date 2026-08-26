@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,14 +48,16 @@ import com.ibabyblue.amedia.compose.material3.AMediaMaterialPlayer
 import com.ibabyblue.amedia.core.AMediaCachePolicy
 import com.ibabyblue.amedia.core.AMediaContentType
 import com.ibabyblue.amedia.core.AMediaController
+import com.ibabyblue.amedia.core.AMediaControllerConfiguration
 import com.ibabyblue.amedia.core.AMediaItem
 import com.ibabyblue.amedia.core.AMediaMetadata
 import com.ibabyblue.amedia.core.AMediaQueueEntry
+import com.ibabyblue.amedia.core.AMediaRepeatMode
 import com.ibabyblue.amedia.core.AMediaSubtitle
-import com.ibabyblue.amedia.feed.AMediaFeedPagerBinding
-import com.ibabyblue.amedia.feed.rememberAMediaFeedController
+import com.ibabyblue.amedia.preload.AMediaPreloadSessionFactory
 import com.ibabyblue.amedia.session.AMediaSessionConnection
 import com.ibabyblue.amedia.session.AMediaSessionConnectionState
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +70,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class DemoPage { Player, Feed, Session, Cache }
+private enum class DemoPage { Player, Preload, Session, Cache }
 
 @Composable
 private fun AMediaExampleApp() {
@@ -88,7 +91,7 @@ private fun AMediaExampleApp() {
             Box(Modifier.fillMaxSize()) {
                 when (pages[selected]) {
                     DemoPage.Player -> ForegroundPlayerDemo()
-                    DemoPage.Feed -> FeedDemo()
+                    DemoPage.Preload -> PreloadDemo()
                     DemoPage.Session -> SessionDemo()
                     DemoPage.Cache -> CachedPlayerDemo()
                 }
@@ -120,10 +123,19 @@ private fun ForegroundPlayerDemo() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun FeedDemo() {
+private fun PreloadDemo() {
     val context = LocalContext.current
-    val controller = rememberAMediaFeedController()
-    val feedState by controller.state.collectAsStateWithLifecycle()
+    val preloadSession = remember {
+        AMediaPreloadSessionFactory.create(
+            context,
+            controllerConfiguration = AMediaControllerConfiguration(
+                repeatMode = AMediaRepeatMode.One,
+            ),
+        )
+    }
+    DisposableEffect(preloadSession) { onDispose(preloadSession::release) }
+    AMediaLifecycleBinding(preloadSession.playback)
+    val playbackState by preloadSession.playback.state.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(pageCount = { 3 })
     val videos = remember(context.packageName) {
         listOf(
@@ -131,20 +143,36 @@ private fun FeedDemo() {
             AMediaQueueEntry("feed-video-2", sampleVideo(context.packageName, R.raw.sample_video_two)),
         )
     }
-    LaunchedEffect(controller, videos) { controller.submit(videos) }
-    AMediaFeedPagerBinding(
-        controller = controller,
-        pagerState = pagerState,
-        entryIndexForPage = { page -> when (page) { 0 -> 0; 2 -> 1; else -> null } },
-    )
+    val entryIdForPage: (Int) -> String? = { page ->
+        when (page) {
+            0 -> videos[0].entryId
+            2 -> videos[1].entryId
+            else -> null
+        }
+    }
+    LaunchedEffect(preloadSession, videos) { preloadSession.update(videos) }
+    LaunchedEffect(preloadSession, pagerState) {
+        snapshotFlow { pagerState.targetPage }
+            .distinctUntilChanged()
+            .collect { page -> preloadSession.hint(entryIdForPage(page)) }
+    }
+    LaunchedEffect(preloadSession, pagerState) {
+        snapshotFlow { pagerState.settledPage }
+            .distinctUntilChanged()
+            .collect { page ->
+                val entryId = entryIdForPage(page)
+                if (entryId == null) preloadSession.playback.pause()
+                else preloadSession.play(entryId)
+            }
+    }
     VerticalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
         when (page) {
             0, 2 -> {
                 val entryIndex = if (page == 0) 0 else 1
                 Box(Modifier.fillMaxSize().background(if (page == 0) Color(0xFF341E44) else Color(0xFF153A34))) {
-                    if (feedState.activeIndex == entryIndex) {
+                    if (playbackState.currentEntry?.entryId == videos[entryIndex].entryId) {
                         AMediaVideo(
-                            controller = controller.playback,
+                            controller = preloadSession.playback,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = AMediaContentScale.Crop,
                             shutter = { DemoPoster("Feed video ${entryIndex + 1}", Color.Transparent) },

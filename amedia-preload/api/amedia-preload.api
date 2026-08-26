@@ -1,0 +1,67 @@
+public final class com/ibabyblue/amedia/preload/AMediaPreloadConfiguration {
+	public fun <init> ()V
+	public fun <init> (JJIIZLjava/lang/String;)V
+	public synthetic fun <init> (JJIIZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()Z
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (JJIIZLjava/lang/String;)Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;JJIIZLjava/lang/String;ILjava/lang/Object;)Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackwardLoadedDurationMillis ()J
+	public final fun getEnabled ()Z
+	public final fun getForwardLoadedDurationMillis ()J
+	public final fun getMaxPreloadBufferBytes ()I
+	public final fun getTrackSelectionDistance ()I
+	public final fun getUserAgent ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+public abstract interface class com/ibabyblue/amedia/preload/AMediaPreloadSession : java/lang/AutoCloseable {
+	public fun close ()V
+	public abstract fun getPlayback ()Lcom/ibabyblue/amedia/core/AMediaController;
+	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun hint (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun play (Ljava/lang/String;JZ)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun play$default (Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;Ljava/lang/String;JZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun release ()V
+	public abstract fun setPreloadingEnabled (Z)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun update (Ljava/util/List;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+}
+
+public final class com/ibabyblue/amedia/preload/AMediaPreloadSession$DefaultImpls {
+	public static fun close (Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;)V
+	public static synthetic fun play$default (Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;Ljava/lang/String;JZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+}
+
+public final class com/ibabyblue/amedia/preload/AMediaPreloadSessionFactory {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/preload/AMediaPreloadSessionFactory;
+	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/preload/AMediaPreloadConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/preload/AMediaPreloadSession;
+}
+
+public final class com/ibabyblue/amedia/preload/AMediaPreloadState {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/util/List;Ljava/lang/String;Z)Lcom/ibabyblue/amedia/preload/AMediaPreloadState;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/preload/AMediaPreloadState;Ljava/util/List;Ljava/lang/String;ZILjava/lang/Object;)Lcom/ibabyblue/amedia/preload/AMediaPreloadState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnchorEntryId ()Ljava/lang/String;
+	public final fun getEntryIds ()Ljava/util/List;
+	public final fun getPreloadingEnabled ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}

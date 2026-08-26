@@ -20,14 +20,17 @@ module with its checked-in ABI file.
 - Enter PiP on API 26+; expect the activity to enter PiP and playback to remain controlled by policy.
 - Rotate or recreate the activity; expect no leaked player and no duplicate audio.
 
-## Feed
+## Generic preloading
 
-- Slowly and rapidly swipe video → image → video; only the settled video may play.
-- Stop midway, move away, then return; expect the saved position after the configured 1-second
-  threshold.
-- Finish a video, move away, and return; expect it to start from its queue start position.
-- On metered connectivity, expect default preloading to stop while active playback continues.
-- Change to an unmetered network; expect preloading to become eligible again.
+- Update an ordered video set, hint the next entry, then play it; expect one shared player and the
+  preloaded MediaSource to be reused.
+- Repeat with audio-only and mixed audio/video entries; expect the same preload behavior without a
+  video-surface requirement.
+- Append entries without reordering existing IDs; expect unchanged MediaSources to be retained.
+- Disable preloading while active playback continues, then enable it and expect priorities to resume.
+- Call `hint(null)`; expect pending priority to clear without pausing active playback.
+- Keep page selection, pagination, network policy, and playback-position persistence in the example
+  or application layer; no public preload type may reference Compose Pager or Feed models.
 
 ## Audio and Session
 
@@ -42,10 +45,22 @@ module with its checked-in ABI file.
 ## Cache and network
 
 - Play a remote `ReadThrough` item with a stable cache key; expect cache size to increase.
+- Play `ReadOnly`; expect existing bytes to be used and cache size not to increase for misses.
+- Play `CacheOnly`; expect cached ranges to play and uncached ranges to fail without network access.
 - Replay after disconnecting network; expect cached ranges to play and uncached ranges to fail with a
   recoverable network error.
 - Verify two cache handles for the same directory do not throw a SimpleCache lock error.
 - Release or pause writers, then remove one item and clear the cache; expect size to return to zero.
+- Populate multiple resources, apply `OlderThan` and `TrimToBytes`, and expect only matching or
+  least-recently-used spans to be removed.
+- Equal public keys in two named spaces remain isolated, while their aggregate size obeys one global
+  LRU limit.
+- Batch resource removal leaves unselected keys intact; manager clear affects only selected spaces.
+- Manager snapshots report aggregate bytes and per-space resource counts consistently.
+- Clear one conversation-style named space and verify other conversations remain intact; do not
+  assert or depend on physical filenames or per-space subdirectories.
+- `:amedia-cache:assembleDebugAndroidTest` compiles the real `SimpleCache` management suite; run it
+  on an API 23+ device before release.
 - Verify authorization headers on progressive, HLS manifest/segments, DASH manifest/segments, and
   subtitle requests with a local test server.
 

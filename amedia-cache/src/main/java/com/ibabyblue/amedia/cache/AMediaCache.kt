@@ -20,30 +20,101 @@ public data class AMediaCacheConfiguration(
     }
 }
 
+/** Explicit maintenance operations in addition to automatic LRU eviction. */
+public sealed interface AMediaCacheClearPolicy {
+    /** Remove every cached resource. */
+    public data object All : AMediaCacheClearPolicy
+
+    /** Remove cache spans whose last access is older than [cutoffEpochMillis]. */
+    public data class OlderThan(public val cutoffEpochMillis: Long) : AMediaCacheClearPolicy {
+        init {
+            require(cutoffEpochMillis >= 0L)
+        }
+    }
+
+    /** Remove least-recently-used spans until the cache occupies at most [maxBytes]. */
+    public data class TrimToBytes(public val maxBytes: Long) : AMediaCacheClearPolicy {
+        init {
+            require(maxBytes >= 0L)
+        }
+    }
+}
+
 public class AMediaCache internal constructor(
     private val handle: SharedCacheHandle,
+    public val space: AMediaCacheSpace = AMediaCacheSpace.Default,
 ) : AutoCloseable {
     private val closed = AtomicBoolean(false)
     internal val cache: SimpleCache
         get() = handle.cache
     public val directory: File
         get() = handle.directory
+    /** Global byte limit of the physical store shared by this space. */
+    public val maxBytes: Long
+        get() = handle.maxBytes
 
     public val sizeBytes: Long
-        get() = if (closed.get()) 0L else synchronized(handle) { cache.cacheSpace }
+        get() = if (closed.get()) 0L else synchronized(handle) {
+            handle.storageKeys(space).sumOf { storageKey ->
+                cache.getCachedSpans(storageKey).sumOf { span -> span.length }
+            }
+        }
 
-    public fun remove(item: AMediaItem) {
+    public val keys: Set<String>
+        get() = if (closed.get()) emptySet() else synchronized(handle) {
+            handle.storageKeys(space)
+                .mapNotNullTo(linkedSetOf()) { AMediaCacheKeyCodec.rawKey(space, it) }
+        }
+
+    public fun cachedBytes(item: AMediaItem): Long = cachedBytes(cacheKey(item))
+
+    public fun cachedBytes(cacheKey: String): Long {
+        require(cacheKey.isNotBlank())
         check(!closed.get()) { "AMediaCache is closed" }
-        synchronized(handle) {
-            cache.removeResource(item.http.cacheKey ?: item.uri.toString())
+        return synchronized(handle) {
+            cache.getCachedSpans(storageKey(cacheKey)).sumOf { span -> span.length }
         }
     }
 
-    public fun clear() {
+    public fun remove(item: AMediaItem) {
+        remove(cacheKey(item))
+    }
+
+    public fun remove(cacheKey: String) {
+        require(cacheKey.isNotBlank())
         check(!closed.get()) { "AMediaCache is closed" }
         synchronized(handle) {
-            cache.keys.toList().forEach(cache::removeResource)
+            cache.removeResource(storageKey(cacheKey))
         }
+    }
+
+    /** Removes the selected resources atomically with respect to other AMedia maintenance calls. */
+    public fun remove(cacheKeys: Collection<String>): Long {
+        require(cacheKeys.all(String::isNotBlank))
+        check(!closed.get()) { "AMediaCache is closed" }
+        return synchronized(handle) {
+            val before = sizeBytes
+            cacheKeys.distinct().forEach { cacheKey ->
+                cache.removeResource(storageKey(cacheKey))
+            }
+            (before - sizeBytes).coerceAtLeast(0L)
+        }
+    }
+
+    public fun removeItems(items: Collection<AMediaItem>): Long =
+        remove(items.map(::cacheKey))
+
+    public fun clear() {
+        clear(AMediaCacheClearPolicy.All)
+    }
+
+    /**
+     * Applies [policy] synchronously and returns the number of bytes removed. Callers should run
+     * large maintenance operations away from the main thread.
+     */
+    public fun clear(policy: AMediaCacheClearPolicy): Long {
+        check(!closed.get()) { "AMediaCache is closed" }
+        return handle.clear(setOf(space), policy)
     }
 
     override fun close() {
@@ -52,8 +123,12 @@ public class AMediaCache internal constructor(
 
     internal fun retain(): AMediaCache {
         check(!closed.get()) { "AMediaCache is closed" }
-        return AMediaCache(SharedCacheRegistry.retain(handle))
+        return AMediaCache(SharedCacheRegistry.retain(handle), space)
     }
+
+    private fun cacheKey(item: AMediaItem): String = item.http.cacheKey ?: item.uri.toString()
+
+    internal fun storageKey(cacheKey: String): String = AMediaCacheKeyCodec.storageKey(space, cacheKey)
 }
 
 public object AMediaCacheFactory {
@@ -66,6 +141,7 @@ public object AMediaCacheFactory {
         val directory = File(context.applicationContext.cacheDir, configuration.directoryName)
         return AMediaCache(
             SharedCacheRegistry.acquire(context.applicationContext, directory, configuration.maxBytes),
+            AMediaCacheSpace.Default,
         )
     }
 }
@@ -76,9 +152,44 @@ internal class SharedCacheHandle(
     val maxBytes: Long,
     val cache: SimpleCache,
     var references: Int,
-)
+) {
+    fun storageKeys(space: AMediaCacheSpace): List<String> =
+        cache.keys.filter { AMediaCacheKeyCodec.belongsTo(space, it) }
 
-private object SharedCacheRegistry {
+    fun clear(spaces: Set<AMediaCacheSpace>?, policy: AMediaCacheClearPolicy): Long = synchronized(this) {
+        val selectedKeys = cache.keys.filter { storageKey ->
+            spaces == null || AMediaCacheKeyCodec.spaceOf(storageKey) in spaces
+        }
+        val before = selectedKeys.sumOf { storageKey ->
+            cache.getCachedSpans(storageKey).sumOf { span -> span.length }
+        }
+        when (policy) {
+            AMediaCacheClearPolicy.All -> selectedKeys.forEach(cache::removeResource)
+            is AMediaCacheClearPolicy.OlderThan -> selectedKeys
+                .flatMap(cache::getCachedSpans)
+                .filter { span -> span.lastTouchTimestamp < policy.cutoffEpochMillis }
+                .forEach(cache::removeSpan)
+            is AMediaCacheClearPolicy.TrimToBytes -> {
+                var remainingBytes = before
+                selectedKeys
+                    .flatMap(cache::getCachedSpans)
+                    .sortedBy { span -> span.lastTouchTimestamp }
+                    .forEach { span ->
+                        if (remainingBytes > policy.maxBytes) {
+                            cache.removeSpan(span)
+                            remainingBytes -= span.length
+                        }
+                    }
+            }
+        }
+        val after = selectedKeys.sumOf { storageKey ->
+            cache.getCachedSpans(storageKey).sumOf { span -> span.length }
+        }
+        (before - after).coerceAtLeast(0L)
+    }
+}
+
+internal object SharedCacheRegistry {
     private val handles = mutableMapOf<String, SharedCacheHandle>()
 
     @Synchronized

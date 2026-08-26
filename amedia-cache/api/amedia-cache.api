@@ -1,9 +1,50 @@
 public final class com/ibabyblue/amedia/cache/AMediaCache : java/lang/AutoCloseable {
+	public final fun cachedBytes (Lcom/ibabyblue/amedia/core/AMediaItem;)J
+	public final fun cachedBytes (Ljava/lang/String;)J
 	public final fun clear ()V
+	public final fun clear (Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy;)J
 	public fun close ()V
 	public final fun getDirectory ()Ljava/io/File;
+	public final fun getKeys ()Ljava/util/Set;
+	public final fun getMaxBytes ()J
 	public final fun getSizeBytes ()J
+	public final fun getSpace ()Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;
 	public final fun remove (Lcom/ibabyblue/amedia/core/AMediaItem;)V
+	public final fun remove (Ljava/lang/String;)V
+	public final fun remove (Ljava/util/Collection;)J
+	public final fun removeItems (Ljava/util/Collection;)J
+}
+
+public abstract interface class com/ibabyblue/amedia/cache/AMediaCacheClearPolicy {
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheClearPolicy$All : com/ibabyblue/amedia/cache/AMediaCacheClearPolicy {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$All;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheClearPolicy$OlderThan : com/ibabyblue/amedia/cache/AMediaCacheClearPolicy {
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$OlderThan;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$OlderThan;JILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$OlderThan;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCutoffEpochMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheClearPolicy$TrimToBytes : com/ibabyblue/amedia/cache/AMediaCacheClearPolicy {
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$TrimToBytes;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$TrimToBytes;JILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy$TrimToBytes;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxBytes ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/ibabyblue/amedia/cache/AMediaCacheConfiguration {
@@ -26,6 +67,107 @@ public final class com/ibabyblue/amedia/cache/AMediaCacheFactory {
 	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/cache/AMediaCache;
 	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;)Lcom/ibabyblue/amedia/cache/AMediaCache;
 	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheManager : java/lang/AutoCloseable {
+	public final fun clear ()J
+	public final fun clear (Lcom/ibabyblue/amedia/cache/AMediaCacheScope;)J
+	public final fun clear (Lcom/ibabyblue/amedia/cache/AMediaCacheScope;Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy;)J
+	public static synthetic fun clear$default (Lcom/ibabyblue/amedia/cache/AMediaCacheManager;Lcom/ibabyblue/amedia/cache/AMediaCacheScope;Lcom/ibabyblue/amedia/cache/AMediaCacheClearPolicy;ILjava/lang/Object;)J
+	public fun close ()V
+	public final fun getDirectory ()Ljava/io/File;
+	public final fun getMaxBytes ()J
+	public final fun open ()Lcom/ibabyblue/amedia/cache/AMediaCache;
+	public final fun open (Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+	public static synthetic fun open$default (Lcom/ibabyblue/amedia/cache/AMediaCacheManager;Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+	public final fun snapshot ()Lcom/ibabyblue/amedia/cache/AMediaCacheSnapshot;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheManagerFactory {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheManagerFactory;
+	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/cache/AMediaCacheManager;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;)Lcom/ibabyblue/amedia/cache/AMediaCacheManager;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheManager;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheMedia3Interop {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheMedia3Interop;
+	public static final fun mediaSource (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static final fun mediaSource (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Ljava/lang/String;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static synthetic fun mediaSource$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Ljava/lang/String;ILjava/lang/Object;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static final fun retain (Lcom/ibabyblue/amedia/cache/AMediaCache;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+}
+
+public abstract interface class com/ibabyblue/amedia/cache/AMediaCacheScope {
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheScope$All : com/ibabyblue/amedia/cache/AMediaCacheScope {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheScope$All;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheScope$Spaces : com/ibabyblue/amedia/cache/AMediaCacheScope {
+	public fun <init> (Ljava/util/Set;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun copy (Ljava/util/Set;)Lcom/ibabyblue/amedia/cache/AMediaCacheScope$Spaces;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheScope$Spaces;Ljava/util/Set;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheScope$Spaces;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSpaces ()Ljava/util/Set;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheSnapshot {
+	public fun <init> (JJLjava/util/List;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (JJLjava/util/List;)Lcom/ibabyblue/amedia/cache/AMediaCacheSnapshot;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheSnapshot;JJLjava/util/List;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheSnapshot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxBytes ()J
+	public final fun getSizeBytes ()J
+	public final fun getSpaces ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/ibabyblue/amedia/cache/AMediaCacheSpace {
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheSpace$Default : com/ibabyblue/amedia/cache/AMediaCacheSpace {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheSpace$Default;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheSpace$Named : com/ibabyblue/amedia/cache/AMediaCacheSpace {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/ibabyblue/amedia/cache/AMediaCacheSpace$Named;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheSpace$Named;Ljava/lang/String;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheSpace$Named;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheSpaceSnapshot {
+	public fun <init> (Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;JI)V
+	public final fun component1 ()Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun copy (Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;JI)Lcom/ibabyblue/amedia/cache/AMediaCacheSpaceSnapshot;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheSpaceSnapshot;Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;JIILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheSpaceSnapshot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResourceCount ()I
+	public final fun getSizeBytes ()J
+	public final fun getSpace ()Lcom/ibabyblue/amedia/cache/AMediaCacheSpace;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/ibabyblue/amedia/cache/AMediaCachedControllerFactory {

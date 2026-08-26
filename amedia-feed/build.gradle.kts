@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -10,6 +11,7 @@ android {
         minSdk = 23
         consumerProguardFiles("consumer-rules.pro")
     }
+    buildFeatures { compose = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -20,8 +22,12 @@ android {
 kotlin { jvmToolchain(17) }
 
 dependencies {
-    api(project(":amedia-core"))
+    api(project(":amedia-compose"))
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.foundation)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.media3.exoplayer)
+    testImplementation(libs.junit)
 }
 
 apply(from = rootProject.file("gradle/publishing.gradle.kts"))

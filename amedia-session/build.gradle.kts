@@ -21,7 +21,10 @@ kotlin { jvmToolchain(17) }
 
 dependencies {
     api(project(":amedia-core"))
-    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.process)
+    api(libs.androidx.media3.session)
+    implementation(libs.kotlinx.coroutines.guava)
 }
 
 apply(from = rootProject.file("gradle/publishing.gradle.kts"))

@@ -1,0 +1,42 @@
+public final class com/ibabyblue/amedia/compose/material3/AMediaControlsStyle {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJFFFJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJFFFJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10 ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-D9Ej5fM ()F
+	public final fun component7-D9Ej5fM ()F
+	public final fun component8-D9Ej5fM ()F
+	public final fun component9 ()J
+	public final fun copy-YSqXVeI (JJJJJFFFJJ)Lcom/ibabyblue/amedia/compose/material3/AMediaControlsStyle;
+	public static synthetic fun copy-YSqXVeI$default (Lcom/ibabyblue/amedia/compose/material3/AMediaControlsStyle;JJJJJFFFJJILjava/lang/Object;)Lcom/ibabyblue/amedia/compose/material3/AMediaControlsStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBufferedProgressColor-0d7_KjU ()J
+	public final fun getCenterIconSize-D9Ej5fM ()F
+	public final fun getContentColor-0d7_KjU ()J
+	public final fun getControlsAutoHideMillis ()J
+	public final fun getDisabledContentColor-0d7_KjU ()J
+	public final fun getDoubleTapSeekMillis ()J
+	public final fun getHorizontalPadding-D9Ej5fM ()F
+	public final fun getIconSize-D9Ej5fM ()F
+	public final fun getOverlayColor-0d7_KjU ()J
+	public final fun getProgressColor-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/compose/material3/AMediaMaterialPlayerKt {
+	public static final fun AMediaMaterialPlayer (Lcom/ibabyblue/amedia/core/AMediaController;Landroidx/compose/ui/Modifier;Lcom/ibabyblue/amedia/compose/material3/AMediaControlsStyle;Lcom/ibabyblue/amedia/compose/AMediaSurfaceType;Lcom/ibabyblue/amedia/compose/AMediaContentScale;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ibabyblue/amedia/compose/material3/ComposableSingletons$AMediaMaterialPlayerKt {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/compose/material3/ComposableSingletons$AMediaMaterialPlayerKt;
+	public fun <init> ()V
+	public final fun getLambda$-2070416319$amedia_compose_material3_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-928976163$amedia_compose_material3_release ()Lkotlin/jvm/functions/Function3;
+}
+

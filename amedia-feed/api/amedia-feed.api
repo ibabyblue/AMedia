@@ -1,0 +1,104 @@
+public final class com/ibabyblue/amedia/feed/AMediaFeedComposeKt {
+	public static final fun AMediaFeedPagerBinding (Lcom/ibabyblue/amedia/feed/AMediaFeedController;Landroidx/compose/foundation/pager/PagerState;ZZLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberAMediaFeedController (Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Landroidx/compose/runtime/Composer;II)Lcom/ibabyblue/amedia/feed/AMediaFeedController;
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedConfiguration {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;IJ)V
+	public synthetic fun <init> (Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;
+	public final fun component2 ()Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public final fun component3 ()I
+	public final fun component4 ()J
+	public final fun copy (Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;IJ)Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;IJILjava/lang/Object;)Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMinimumRetainedPositionMillis ()J
+	public final fun getNetworkPreloadPolicy ()Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public final fun getPreloadPolicy ()Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;
+	public final fun getRetainedPositionCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/ibabyblue/amedia/feed/AMediaFeedController : java/lang/AutoCloseable {
+	public abstract fun activate (I)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun addSuppression (Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public fun close ()V
+	public abstract fun deactivate ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun getPlayback ()Lcom/ibabyblue/amedia/core/AMediaController;
+	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun release ()V
+	public abstract fun removeSuppression (Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setPreloadingEnabled (Z)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun submit (Ljava/util/List;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedController$DefaultImpls {
+	public static fun close (Lcom/ibabyblue/amedia/feed/AMediaFeedController;)V
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedControllerFactory {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ibabyblue/amedia/feed/AMediaFeedControllerFactory;
+	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/feed/AMediaFeedController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;)Lcom/ibabyblue/amedia/feed/AMediaFeedController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/feed/AMediaFeedController;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/feed/AMediaFeedConfiguration;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/feed/AMediaFeedController;
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy : java/lang/Enum {
+	public static final field Always Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public static final field Never Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public static final field UnmeteredOnly Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+	public static fun values ()[Lcom/ibabyblue/amedia/feed/AMediaFeedNetworkPreloadPolicy;
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (JJIZ)V
+	public synthetic fun <init> (JJIZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun component4 ()Z
+	public final fun copy (JJIZ)Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;JJIZILjava/lang/Object;)Lcom/ibabyblue/amedia/feed/AMediaFeedPreloadPolicy;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getNextLoadedDurationMillis ()J
+	public final fun getPreviousLoadedDurationMillis ()J
+	public final fun getTrackSelectionDistance ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/feed/AMediaFeedState {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;ILjava/lang/String;ZZZ)V
+	public synthetic fun <init> (Ljava/util/List;ILjava/lang/String;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun copy (Ljava/util/List;ILjava/lang/String;ZZZ)Lcom/ibabyblue/amedia/feed/AMediaFeedState;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/feed/AMediaFeedState;Ljava/util/List;ILjava/lang/String;ZZZILjava/lang/Object;)Lcom/ibabyblue/amedia/feed/AMediaFeedState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActiveEntryId ()Ljava/lang/String;
+	public final fun getActiveIndex ()I
+	public final fun getEntries ()Ljava/util/List;
+	public final fun getNetworkAllowsPreloading ()Z
+	public final fun getPreloadingEnabled ()Z
+	public final fun getPreloadingRequested ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

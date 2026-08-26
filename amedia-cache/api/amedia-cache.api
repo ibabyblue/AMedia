@@ -1,0 +1,38 @@
+public final class com/ibabyblue/amedia/cache/AMediaCache : java/lang/AutoCloseable {
+	public final fun clear ()V
+	public fun close ()V
+	public final fun getDirectory ()Ljava/io/File;
+	public final fun getSizeBytes ()J
+	public final fun remove (Lcom/ibabyblue/amedia/core/AMediaItem;)V
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheConfiguration {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun copy (Ljava/lang/String;J)Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDirectoryName ()Ljava/lang/String;
+	public final fun getMaxBytes ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCacheFactory {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCacheFactory;
+	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCacheConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/cache/AMediaCache;
+}
+
+public final class com/ibabyblue/amedia/cache/AMediaCachedControllerFactory {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/cache/AMediaCachedControllerFactory;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaController;
+}
+

@@ -1,0 +1,98 @@
+public final class com/ibabyblue/amedia/session/AMediaIdleNotificationPolicy : java/lang/Enum {
+	public static final field AfterStopOrError Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+	public static final field Always Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+	public static final field Never Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+	public static fun values ()[Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaPlaybackResumption {
+	public fun <init> (Ljava/util/List;IJ)V
+	public synthetic fun <init> (Ljava/util/List;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()J
+	public final fun copy (Ljava/util/List;IJ)Lcom/ibabyblue/amedia/session/AMediaPlaybackResumption;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/session/AMediaPlaybackResumption;Ljava/util/List;IJILjava/lang/Object;)Lcom/ibabyblue/amedia/session/AMediaPlaybackResumption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntries ()Ljava/util/List;
+	public final fun getStartIndex ()I
+	public final fun getStartPositionMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/ibabyblue/amedia/session/AMediaPlaybackResumptionProvider {
+	public abstract fun load (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnection : java/lang/AutoCloseable {
+	public static final field Companion Lcom/ibabyblue/amedia/session/AMediaSessionConnection$Companion;
+	public synthetic fun <init> (Lcom/google/common/util/concurrent/ListenableFuture;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/util/concurrent/Executor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	public static final fun connect (Landroid/content/Context;Ljava/lang/Class;)Lcom/ibabyblue/amedia/session/AMediaSessionConnection;
+	public static final fun connect (Landroid/content/Context;Ljava/lang/Class;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/session/AMediaSessionConnection;
+	public final fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnection$Companion {
+	public final fun connect (Landroid/content/Context;Ljava/lang/Class;)Lcom/ibabyblue/amedia/session/AMediaSessionConnection;
+	public final fun connect (Landroid/content/Context;Ljava/lang/Class;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/session/AMediaSessionConnection;
+	public static synthetic fun connect$default (Lcom/ibabyblue/amedia/session/AMediaSessionConnection$Companion;Landroid/content/Context;Ljava/lang/Class;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/session/AMediaSessionConnection;
+}
+
+public abstract interface class com/ibabyblue/amedia/session/AMediaSessionConnectionState {
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnectionState$Closed : com/ibabyblue/amedia/session/AMediaSessionConnectionState {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Closed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnectionState$Connected : com/ibabyblue/amedia/session/AMediaSessionConnectionState {
+	public fun <init> (Lcom/ibabyblue/amedia/core/AMediaController;)V
+	public final fun component1 ()Lcom/ibabyblue/amedia/core/AMediaController;
+	public final fun copy (Lcom/ibabyblue/amedia/core/AMediaController;)Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Connected;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Connected;Lcom/ibabyblue/amedia/core/AMediaController;ILjava/lang/Object;)Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Connected;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getController ()Lcom/ibabyblue/amedia/core/AMediaController;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnectionState$Connecting : com/ibabyblue/amedia/session/AMediaSessionConnectionState {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Connecting;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/session/AMediaSessionConnectionState$Failed : com/ibabyblue/amedia/session/AMediaSessionConnectionState {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun component1 ()Ljava/lang/Throwable;
+	public final fun copy (Ljava/lang/Throwable;)Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Failed;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Failed;Ljava/lang/Throwable;ILjava/lang/Object;)Lcom/ibabyblue/amedia/session/AMediaSessionConnectionState$Failed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/ibabyblue/amedia/session/AMediaSessionService : androidx/media3/session/MediaSessionService {
+	public fun <init> ()V
+	protected fun configureSession (Landroidx/media3/session/MediaSession$Builder;)Landroidx/media3/session/MediaSession$Builder;
+	protected fun controllerConfiguration ()Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;
+	protected fun createController ()Lcom/ibabyblue/amedia/core/AMediaController;
+	protected fun createSessionCallback ()Landroidx/media3/session/MediaSession$Callback;
+	protected final fun getAmediaController ()Lcom/ibabyblue/amedia/core/AMediaController;
+	protected fun idleNotificationPolicy ()Lcom/ibabyblue/amedia/session/AMediaIdleNotificationPolicy;
+	protected fun mediaNotificationProvider ()Landroidx/media3/session/MediaNotification$Provider;
+	public fun onCreate ()V
+	public fun onDestroy ()V
+	public fun onGetSession (Landroidx/media3/session/MediaSession$ControllerInfo;)Landroidx/media3/session/MediaSession;
+	protected fun playbackResumptionProvider ()Lcom/ibabyblue/amedia/session/AMediaPlaybackResumptionProvider;
+}
+

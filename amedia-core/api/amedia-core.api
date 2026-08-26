@@ -1,0 +1,662 @@
+public final class com/ibabyblue/amedia/core/AMediaAudioPolicy : java/lang/Enum {
+	public static final field Ambient Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public static final field Media Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public static final field MutedInlineVideo Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy : java/lang/Enum {
+	public static final field Continue Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static final field ContinueAudio Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static final field Default Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static final field Pause Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaCachePolicy : java/lang/Enum {
+	public static final field None Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public static final field ReadThrough Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaCapabilities {
+	public fun <init> ()V
+	public fun <init> (ZZZZZZZZZZ)V
+	public synthetic fun <init> (ZZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component10 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (ZZZZZZZZZZ)Lcom/ibabyblue/amedia/core/AMediaCapabilities;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaCapabilities;ZZZZZZZZZZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCapabilities;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCanPause ()Z
+	public final fun getCanPlay ()Z
+	public final fun getCanSeek ()Z
+	public final fun getCanSetSpeed ()Z
+	public final fun getCanSetTracks ()Z
+	public final fun getCanSkipNext ()Z
+	public final fun getCanSkipPrevious ()Z
+	public final fun getHasVideoOutput ()Z
+	public final fun getSupportsBackgroundPlayback ()Z
+	public final fun getSupportsPictureInPicture ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaClippingConfiguration {
+	public fun <init> ()V
+	public fun <init> (JLjava/lang/Long;)V
+	public synthetic fun <init> (JLjava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun copy (JLjava/lang/Long;)Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;JLjava/lang/Long;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEndPositionMillis ()Ljava/lang/Long;
+	public final fun getStartPositionMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaCommandRejection : java/lang/Enum {
+	public static final field DuplicateQueueEntryId Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static final field EmptyQueue Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static final field EntryNotFound Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static final field InvalidArgument Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static final field Released Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static final field Unsupported Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+}
+
+public abstract interface class com/ibabyblue/amedia/core/AMediaCommandResult {
+}
+
+public final class com/ibabyblue/amedia/core/AMediaCommandResult$Accepted : com/ibabyblue/amedia/core/AMediaCommandResult {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/core/AMediaCommandResult$Accepted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaCommandResult$Rejected : com/ibabyblue/amedia/core/AMediaCommandResult {
+	public fun <init> (Lcom/ibabyblue/amedia/core/AMediaCommandRejection;)V
+	public final fun component1 ()Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public final fun copy (Lcom/ibabyblue/amedia/core/AMediaCommandRejection;)Lcom/ibabyblue/amedia/core/AMediaCommandResult$Rejected;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaCommandResult$Rejected;Lcom/ibabyblue/amedia/core/AMediaCommandRejection;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult$Rejected;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReason ()Lcom/ibabyblue/amedia/core/AMediaCommandRejection;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaContentType : java/lang/Enum {
+	public static final field Music Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static final field Speech Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static final field Unknown Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static final field Video Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaContentType;
+}
+
+public abstract interface class com/ibabyblue/amedia/core/AMediaController : java/lang/AutoCloseable {
+	public abstract fun add (Lcom/ibabyblue/amedia/core/AMediaQueueEntry;I)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun add$default (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;IILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun addSuppression (Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun clear ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public fun close ()V
+	public abstract fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
+	public abstract fun getProgress ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun move (Ljava/lang/String;I)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun pause ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun play ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun prepare ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun release ()V
+	public abstract fun remove (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun removeSuppression (Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun retry ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun seekTo (J)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun seekToEntry (Ljava/lang/String;J)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun seekToEntry$default (Lcom/ibabyblue/amedia/core/AMediaController;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun selectTrack (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setMedia (Lcom/ibabyblue/amedia/core/AMediaItem;JLjava/lang/Boolean;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun setMedia$default (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaItem;JLjava/lang/Boolean;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setMuted (Z)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setQueue (Ljava/util/List;ILjava/lang/Long;Ljava/lang/Boolean;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun setQueue$default (Lcom/ibabyblue/amedia/core/AMediaController;Ljava/util/List;ILjava/lang/Long;Ljava/lang/Boolean;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setRepeatMode (Lcom/ibabyblue/amedia/core/AMediaRepeatMode;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setSpeed (F)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setSubtitlesEnabled (Z)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun setVolume (F)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun skipToNext ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun skipToPrevious ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public abstract fun stop ()Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaController$DefaultImpls {
+	public static synthetic fun add$default (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;IILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static fun close (Lcom/ibabyblue/amedia/core/AMediaController;)V
+	public static synthetic fun seekToEntry$default (Lcom/ibabyblue/amedia/core/AMediaController;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun setMedia$default (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaItem;JLjava/lang/Boolean;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun setQueue$default (Lcom/ibabyblue/amedia/core/AMediaController;Ljava/util/List;ILjava/lang/Long;Ljava/lang/Boolean;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaControllerConfiguration {
+	public fun <init> ()V
+	public fun <init> (JFZFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLcom/ibabyblue/amedia/core/AMediaAudioPolicy;ZZZLcom/ibabyblue/amedia/core/AMediaRetryPolicy;Lcom/ibabyblue/amedia/core/AMediaLogger;)V
+	public synthetic fun <init> (JFZFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLcom/ibabyblue/amedia/core/AMediaAudioPolicy;ZZZLcom/ibabyblue/amedia/core/AMediaRetryPolicy;Lcom/ibabyblue/amedia/core/AMediaLogger;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component10 ()Z
+	public final fun component11 ()Lcom/ibabyblue/amedia/core/AMediaRetryPolicy;
+	public final fun component12 ()Lcom/ibabyblue/amedia/core/AMediaLogger;
+	public final fun component2 ()F
+	public final fun component3 ()Z
+	public final fun component4 ()F
+	public final fun component5 ()Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public final fun component6 ()Z
+	public final fun component7 ()Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (JFZFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLcom/ibabyblue/amedia/core/AMediaAudioPolicy;ZZZLcom/ibabyblue/amedia/core/AMediaRetryPolicy;Lcom/ibabyblue/amedia/core/AMediaLogger;)Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;JFZFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLcom/ibabyblue/amedia/core/AMediaAudioPolicy;ZZZLcom/ibabyblue/amedia/core/AMediaRetryPolicy;Lcom/ibabyblue/amedia/core/AMediaLogger;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAudioPolicy ()Lcom/ibabyblue/amedia/core/AMediaAudioPolicy;
+	public final fun getHandleAudioBecomingNoisy ()Z
+	public final fun getInitialSpeed ()F
+	public final fun getInitialVolume ()F
+	public final fun getInitiallyMuted ()Z
+	public final fun getLogger ()Lcom/ibabyblue/amedia/core/AMediaLogger;
+	public final fun getProgressIntervalMillis ()J
+	public final fun getRepeatMode ()Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public final fun getRetryPolicy ()Lcom/ibabyblue/amedia/core/AMediaRetryPolicy;
+	public final fun getSubtitlesEnabled ()Z
+	public final fun getSupportsBackgroundPlayback ()Z
+	public final fun getSupportsPictureInPicture ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaControllerFactory {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/core/AMediaControllerFactory;
+	public static final fun create (Landroid/content/Context;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaController;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaDrmConfiguration {
+	public fun <init> (Ljava/util/UUID;Landroid/net/Uri;Ljava/util/Map;ZZ[B)V
+	public synthetic fun <init> (Ljava/util/UUID;Landroid/net/Uri;Ljava/util/Map;ZZ[BILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/UUID;
+	public final fun component2 ()Landroid/net/Uri;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()[B
+	public final fun copy (Ljava/util/UUID;Landroid/net/Uri;Ljava/util/Map;ZZ[B)Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;Ljava/util/UUID;Landroid/net/Uri;Ljava/util/Map;ZZ[BILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getForceDefaultLicenseUri ()Z
+	public final fun getLicenseUri ()Landroid/net/Uri;
+	public final fun getMultiSession ()Z
+	public final fun getOfflineKeySetId ()[B
+	public final fun getRequestHeaders ()Ljava/util/Map;
+	public final fun getScheme ()Ljava/util/UUID;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaError {
+	public fun <init> (Lcom/ibabyblue/amedia/core/AMediaErrorCategory;Ljava/lang/String;ZLjava/lang/Throwable;)V
+	public synthetic fun <init> (Lcom/ibabyblue/amedia/core/AMediaErrorCategory;Ljava/lang/String;ZLjava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/lang/Throwable;
+	public final fun copy (Lcom/ibabyblue/amedia/core/AMediaErrorCategory;Ljava/lang/String;ZLjava/lang/Throwable;)Lcom/ibabyblue/amedia/core/AMediaError;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaError;Lcom/ibabyblue/amedia/core/AMediaErrorCategory;Ljava/lang/String;ZLjava/lang/Throwable;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaError;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCategory ()Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public final fun getCause ()Ljava/lang/Throwable;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isRecoverable ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaErrorCategory : java/lang/Enum {
+	public static final field Decoder Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static final field Drm Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static final field Network Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static final field Source Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static final field Unexpected Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static final field Unsupported Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaErrorCategory;
+}
+
+public abstract interface class com/ibabyblue/amedia/core/AMediaEvent {
+	public abstract fun getEntryId ()Ljava/lang/String;
+	public abstract fun getGeneration ()J
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$Failed : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaError;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Lcom/ibabyblue/amedia/core/AMediaError;
+	public final fun copy (Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaError;)Lcom/ibabyblue/amedia/core/AMediaEvent$Failed;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$Failed;Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaError;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$Failed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getEntryId ()Ljava/lang/String;
+	public final fun getError ()Lcom/ibabyblue/amedia/core/AMediaError;
+	public fun getGeneration ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$FirstFrameRendered : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun copy (Ljava/lang/String;J)Lcom/ibabyblue/amedia/core/AMediaEvent$FirstFrameRendered;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$FirstFrameRendered;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$FirstFrameRendered;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getEntryId ()Ljava/lang/String;
+	public fun getGeneration ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$MediaChanged : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun copy (Ljava/lang/String;J)Lcom/ibabyblue/amedia/core/AMediaEvent$MediaChanged;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$MediaChanged;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$MediaChanged;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getEntryId ()Ljava/lang/String;
+	public fun getGeneration ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$PlaybackEnded : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun copy (Ljava/lang/String;J)Lcom/ibabyblue/amedia/core/AMediaEvent$PlaybackEnded;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$PlaybackEnded;Ljava/lang/String;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$PlaybackEnded;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getEntryId ()Ljava/lang/String;
+	public fun getGeneration ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$RetryScheduled : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;JIJ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()I
+	public final fun component4 ()J
+	public final fun copy (Ljava/lang/String;JIJ)Lcom/ibabyblue/amedia/core/AMediaEvent$RetryScheduled;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$RetryScheduled;Ljava/lang/String;JIJILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$RetryScheduled;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAttempt ()I
+	public final fun getDelayMillis ()J
+	public fun getEntryId ()Ljava/lang/String;
+	public fun getGeneration ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaEvent$SeekCompleted : com/ibabyblue/amedia/core/AMediaEvent {
+	public fun <init> (Ljava/lang/String;JJ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;JJ)Lcom/ibabyblue/amedia/core/AMediaEvent$SeekCompleted;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaEvent$SeekCompleted;Ljava/lang/String;JJILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaEvent$SeekCompleted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getEntryId ()Ljava/lang/String;
+	public fun getGeneration ()J
+	public final fun getPositionMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaHttpConfiguration {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/Map;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/Map;Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCacheKey ()Ljava/lang/String;
+	public final fun getHeaders ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaItem {
+	public fun <init> (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaMetadata;Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;Lcom/ibabyblue/amedia/core/AMediaCachePolicy;Ljava/util/List;Ljava/lang/Boolean;Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaMetadata;Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;Lcom/ibabyblue/amedia/core/AMediaCachePolicy;Ljava/util/List;Ljava/lang/Boolean;Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public final fun component11 ()Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;
+	public final fun component12 ()Ljava/util/Map;
+	public final fun component2 ()Landroid/net/Uri;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lcom/ibabyblue/amedia/core/AMediaMetadata;
+	public final fun component5 ()Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;
+	public final fun component6 ()Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/Boolean;
+	public final fun component9 ()Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;
+	public final fun copy (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaMetadata;Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;Lcom/ibabyblue/amedia/core/AMediaCachePolicy;Ljava/util/List;Ljava/lang/Boolean;Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;Ljava/util/Map;)Lcom/ibabyblue/amedia/core/AMediaItem;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaItem;Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaMetadata;Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;Lcom/ibabyblue/amedia/core/AMediaCachePolicy;Ljava/util/List;Ljava/lang/Boolean;Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;Ljava/util/Map;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackgroundPlaybackPolicy ()Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public final fun getCachePolicy ()Lcom/ibabyblue/amedia/core/AMediaCachePolicy;
+	public final fun getClipping ()Lcom/ibabyblue/amedia/core/AMediaClippingConfiguration;
+	public final fun getDrm ()Lcom/ibabyblue/amedia/core/AMediaDrmConfiguration;
+	public final fun getExtras ()Ljava/util/Map;
+	public final fun getHttp ()Lcom/ibabyblue/amedia/core/AMediaHttpConfiguration;
+	public final fun getMediaId ()Ljava/lang/String;
+	public final fun getMetadata ()Lcom/ibabyblue/amedia/core/AMediaMetadata;
+	public final fun getMimeType ()Ljava/lang/String;
+	public final fun getSubtitles ()Ljava/util/List;
+	public final fun getSubtitlesEnabled ()Ljava/lang/Boolean;
+	public final fun getUri ()Landroid/net/Uri;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaLogLevel : java/lang/Enum {
+	public static final field Debug Lcom/ibabyblue/amedia/core/AMediaLogLevel;
+	public static final field Error Lcom/ibabyblue/amedia/core/AMediaLogLevel;
+	public static final field Warning Lcom/ibabyblue/amedia/core/AMediaLogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaLogLevel;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaLogLevel;
+}
+
+public abstract interface class com/ibabyblue/amedia/core/AMediaLogger {
+	public static final field Companion Lcom/ibabyblue/amedia/core/AMediaLogger$Companion;
+	public abstract fun log (Lcom/ibabyblue/amedia/core/AMediaLogLevel;Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/ibabyblue/amedia/core/AMediaLogger$Companion {
+	public final fun getNone ()Lcom/ibabyblue/amedia/core/AMediaLogger;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaMetadata {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Lcom/ibabyblue/amedia/core/AMediaContentType;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Lcom/ibabyblue/amedia/core/AMediaContentType;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Landroid/net/Uri;
+	public final fun component5 ()Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Lcom/ibabyblue/amedia/core/AMediaContentType;)Lcom/ibabyblue/amedia/core/AMediaMetadata;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaMetadata;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Lcom/ibabyblue/amedia/core/AMediaContentType;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaMetadata;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlbumTitle ()Ljava/lang/String;
+	public final fun getArtist ()Ljava/lang/String;
+	public final fun getArtworkUri ()Landroid/net/Uri;
+	public final fun getContentType ()Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaPlaybackStatus : java/lang/Enum {
+	public static final field Buffering Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Ended Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Failed Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Idle Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Paused Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Playing Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Preparing Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static final field Ready Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaProgress {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;JLjava/lang/Long;JZ)V
+	public synthetic fun <init> (Ljava/lang/String;JLjava/lang/Long;JZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()J
+	public final fun component5 ()Z
+	public final fun copy (Ljava/lang/String;JLjava/lang/Long;JZ)Lcom/ibabyblue/amedia/core/AMediaProgress;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaProgress;Ljava/lang/String;JLjava/lang/Long;JZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaProgress;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBufferedPositionMillis ()J
+	public final fun getDurationMillis ()Ljava/lang/Long;
+	public final fun getEntryId ()Ljava/lang/String;
+	public final fun getFraction ()Ljava/lang/Float;
+	public final fun getPositionMillis ()J
+	public fun hashCode ()I
+	public final fun isSeeking ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaQueueEntry {
+	public fun <init> (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaItem;J)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaItem;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/ibabyblue/amedia/core/AMediaItem;
+	public final fun component3 ()J
+	public final fun copy (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaItem;J)Lcom/ibabyblue/amedia/core/AMediaQueueEntry;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaItem;JILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaQueueEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntryId ()Ljava/lang/String;
+	public final fun getItem ()Lcom/ibabyblue/amedia/core/AMediaItem;
+	public final fun getStartPositionMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaRepeatMode : java/lang/Enum {
+	public static final field All Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public static final field Off Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public static final field One Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaRetryPolicy {
+	public fun <init> ()V
+	public fun <init> (IJJ)V
+	public synthetic fun <init> (IJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun copy (IJJ)Lcom/ibabyblue/amedia/core/AMediaRetryPolicy;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaRetryPolicy;IJJILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaRetryPolicy;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInitialDelayMillis ()J
+	public final fun getMaxAutomaticRetries ()I
+	public final fun getMaxDelayMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaState {
+	public fun <init> (Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaPlaybackStatus;Ljava/util/List;IZZLjava/util/Set;ZZFFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLjava/lang/String;Ljava/util/List;Lcom/ibabyblue/amedia/core/AMediaVideoSize;Lcom/ibabyblue/amedia/core/AMediaError;Lcom/ibabyblue/amedia/core/AMediaCapabilities;)V
+	public synthetic fun <init> (Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaPlaybackStatus;Ljava/util/List;IZZLjava/util/Set;ZZFFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLjava/lang/String;Ljava/util/List;Lcom/ibabyblue/amedia/core/AMediaVideoSize;Lcom/ibabyblue/amedia/core/AMediaError;Lcom/ibabyblue/amedia/core/AMediaCapabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Z
+	public final fun component11 ()F
+	public final fun component12 ()F
+	public final fun component13 ()Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public final fun component14 ()Z
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Ljava/util/List;
+	public final fun component17 ()Lcom/ibabyblue/amedia/core/AMediaVideoSize;
+	public final fun component18 ()Lcom/ibabyblue/amedia/core/AMediaError;
+	public final fun component19 ()Lcom/ibabyblue/amedia/core/AMediaCapabilities;
+	public final fun component2 ()J
+	public final fun component3 ()Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()I
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Ljava/util/Set;
+	public final fun component9 ()Z
+	public final fun copy (Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaPlaybackStatus;Ljava/util/List;IZZLjava/util/Set;ZZFFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLjava/lang/String;Ljava/util/List;Lcom/ibabyblue/amedia/core/AMediaVideoSize;Lcom/ibabyblue/amedia/core/AMediaError;Lcom/ibabyblue/amedia/core/AMediaCapabilities;)Lcom/ibabyblue/amedia/core/AMediaState;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaState;Ljava/lang/String;JLcom/ibabyblue/amedia/core/AMediaPlaybackStatus;Ljava/util/List;IZZLjava/util/Set;ZZFFLcom/ibabyblue/amedia/core/AMediaRepeatMode;ZLjava/lang/String;Ljava/util/List;Lcom/ibabyblue/amedia/core/AMediaVideoSize;Lcom/ibabyblue/amedia/core/AMediaError;Lcom/ibabyblue/amedia/core/AMediaCapabilities;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCapabilities ()Lcom/ibabyblue/amedia/core/AMediaCapabilities;
+	public final fun getControllerId ()Ljava/lang/String;
+	public final fun getCurrentEntry ()Lcom/ibabyblue/amedia/core/AMediaQueueEntry;
+	public final fun getCurrentIndex ()I
+	public final fun getError ()Lcom/ibabyblue/amedia/core/AMediaError;
+	public final fun getGeneration ()J
+	public final fun getPlayWhenReady ()Z
+	public final fun getQueue ()Ljava/util/List;
+	public final fun getRepeatMode ()Lcom/ibabyblue/amedia/core/AMediaRepeatMode;
+	public final fun getSelectedSubtitleTrackId ()Ljava/lang/String;
+	public final fun getSpeed ()F
+	public final fun getStatus ()Lcom/ibabyblue/amedia/core/AMediaPlaybackStatus;
+	public final fun getSubtitlesEnabled ()Z
+	public final fun getSuppressionReasons ()Ljava/util/Set;
+	public final fun getTracks ()Ljava/util/List;
+	public final fun getVideoSize ()Lcom/ibabyblue/amedia/core/AMediaVideoSize;
+	public final fun getVolume ()F
+	public fun hashCode ()I
+	public final fun isFirstFrameRendered ()Z
+	public final fun isMuted ()Z
+	public final fun isPlaying ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaSubtitle {
+	public fun <init> (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+	public synthetic fun <init> (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Landroid/net/Uri;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)Lcom/ibabyblue/amedia/core/AMediaSubtitle;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaSubtitle;Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaSubtitle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLanguage ()Ljava/lang/String;
+	public final fun getMimeType ()Ljava/lang/String;
+	public final fun getUri ()Landroid/net/Uri;
+	public fun hashCode ()I
+	public final fun isDefault ()Z
+	public final fun isForced ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaSuppressionReason : java/lang/Enum {
+	public static final field AudioFocus Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static final field BusinessOverlay Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static final field Lifecycle Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static final field Network Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static final field ScreenHidden Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaSuppressionReason;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaTrack {
+	public fun <init> (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaTrackType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaTrackType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaTrackType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)Lcom/ibabyblue/amedia/core/AMediaTrack;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaTrack;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaTrackType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaTrack;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getLanguage ()Ljava/lang/String;
+	public final fun getMimeType ()Ljava/lang/String;
+	public final fun getSelected ()Z
+	public final fun getSupported ()Z
+	public final fun getType ()Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaTrackType : java/lang/Enum {
+	public static final field Audio Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public static final field Text Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public static final field Unknown Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public static final field Video Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaTrackType;
+	public static fun values ()[Lcom/ibabyblue/amedia/core/AMediaTrackType;
+}
+
+public final class com/ibabyblue/amedia/core/AMediaVideoSize {
+	public fun <init> (IIF)V
+	public synthetic fun <init> (IIFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()F
+	public final fun copy (IIF)Lcom/ibabyblue/amedia/core/AMediaVideoSize;
+	public static synthetic fun copy$default (Lcom/ibabyblue/amedia/core/AMediaVideoSize;IIFILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaVideoSize;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeight ()I
+	public final fun getPixelWidthHeightRatio ()F
+	public final fun getWidth ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class com/ibabyblue/amedia/core/ExperimentalAMediaApi : java/lang/annotation/Annotation {
+}
+
+public final class com/ibabyblue/amedia/core/interop/AMediaMedia3Interop {
+	public static final field INSTANCE Lcom/ibabyblue/amedia/core/interop/AMediaMedia3Interop;
+	public static final fun backgroundPlaybackPolicy (Landroidx/media3/common/MediaItem;)Lcom/ibabyblue/amedia/core/AMediaBackgroundPlaybackPolicy;
+	public static final fun contentType (Landroidx/media3/common/MediaItem;)Lcom/ibabyblue/amedia/core/AMediaContentType;
+	public static final fun mediaItem (Lcom/ibabyblue/amedia/core/AMediaQueueEntry;)Landroidx/media3/common/MediaItem;
+	public static final fun mediaSource (Landroid/content/Context;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static final fun mediaSource (Landroid/content/Context;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Ljava/lang/String;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static synthetic fun mediaSource$default (Landroid/content/Context;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Ljava/lang/String;ILjava/lang/Object;)Landroidx/media3/exoplayer/source/MediaSource;
+	public static final fun player (Lcom/ibabyblue/amedia/core/AMediaController;)Landroidx/media3/common/Player;
+	public static final fun setPreloadedMedia (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Landroidx/media3/exoplayer/source/MediaSource;JZ)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static synthetic fun setPreloadedMedia$default (Lcom/ibabyblue/amedia/core/AMediaController;Lcom/ibabyblue/amedia/core/AMediaQueueEntry;Landroidx/media3/exoplayer/source/MediaSource;JZILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaCommandResult;
+	public static final fun wrap (Landroidx/media3/common/Player;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ZLkotlin/jvm/functions/Function1;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static synthetic fun wrap$default (Landroidx/media3/common/Player;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaController;
+}
+

@@ -21,6 +21,7 @@ kotlin { jvmToolchain(17) }
 
 dependencies {
     api(project(":amedia-core"))
+    implementation(libs.androidx.media3.database)
     implementation(libs.androidx.media3.datasource)
     implementation(libs.androidx.media3.exoplayer)
 }

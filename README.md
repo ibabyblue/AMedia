@@ -3,8 +3,7 @@
 AMedia is a Kotlin-first audio and video playback toolkit for Android and Jetpack Compose. It uses
 AndroidX Media3 internally, but exposes stable AMedia-owned models, state, events, and Compose APIs.
 
-The project is being prepared for its first `0.1.0` release. It currently publishes local Maven
-artifacts as `0.1.0-SNAPSHOT`.
+The current release is `0.1.0`. The project can publish all library artifacts to Maven Local.
 
 ## Why AMedia
 
@@ -56,9 +55,9 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.ibabyblue:amedia:0.1.0-SNAPSHOT")
-    implementation("io.github.ibabyblue:amedia-compose-material3:0.1.0-SNAPSHOT")
-    implementation("io.github.ibabyblue:amedia-preload:0.1.0-SNAPSHOT")
+    implementation("io.github.ibabyblue:amedia:0.1.0")
+    implementation("io.github.ibabyblue:amedia-compose-material3:0.1.0")
+    implementation("io.github.ibabyblue:amedia-preload:0.1.0")
 }
 ```
 

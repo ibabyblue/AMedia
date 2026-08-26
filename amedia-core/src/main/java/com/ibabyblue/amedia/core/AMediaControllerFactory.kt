@@ -36,6 +36,9 @@ public object AMediaControllerFactory {
             player = player,
             configuration = configuration,
             releasePlayer = true,
+            mediaSourceProvider = { entry ->
+                createDefaultMediaSource(context.applicationContext, entry)
+            },
         )
     }
 }

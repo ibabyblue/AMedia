@@ -49,4 +49,14 @@ class AMediaCoreModelsTest {
         assertEquals(first.hashCode(), same.hashCode())
         assertNotEquals(first, different)
     }
+
+    @Test
+    fun retryPolicyUsesBoundedExponentialBackoff() {
+        val policy = AMediaRetryPolicy(initialDelayMillis = 500L, maxDelayMillis = 1_500L)
+
+        assertEquals(500L, policy.delayForAttempt(1))
+        assertEquals(1_000L, policy.delayForAttempt(2))
+        assertEquals(1_500L, policy.delayForAttempt(3))
+        assertEquals(1_500L, policy.delayForAttempt(8))
+    }
 }

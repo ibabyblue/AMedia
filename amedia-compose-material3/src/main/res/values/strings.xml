@@ -1,0 +1,13 @@
+<resources>
+    <string name="amedia_play">Play</string>
+    <string name="amedia_pause">Pause</string>
+    <string name="amedia_mute">Mute</string>
+    <string name="amedia_unmute">Unmute</string>
+    <string name="amedia_subtitles_on">Hide subtitles</string>
+    <string name="amedia_subtitles_off">Show subtitles</string>
+    <string name="amedia_fullscreen">Full screen</string>
+    <string name="amedia_picture_in_picture">Picture in picture</string>
+    <string name="amedia_retry">Retry</string>
+    <string name="amedia_speed">Playback speed %1$s</string>
+    <string name="amedia_seek_position">Playback position</string>
+</resources>

@@ -1,5 +1,7 @@
 package com.ibabyblue.amedia.core
 
+import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.common.C
@@ -12,10 +14,16 @@ import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.MediaSource
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -35,6 +43,7 @@ internal class Media3AMediaController(
     internal val player: Player,
     private val configuration: AMediaControllerConfiguration,
     private val releasePlayer: Boolean,
+    private val mediaSourceProvider: ((AMediaQueueEntry) -> MediaSource)? = null,
 ) : AMediaController {
     private val controllerId = UUID.randomUUID().toString()
     private val released = AtomicBoolean(false)
@@ -46,6 +55,9 @@ internal class Media3AMediaController(
     private var muted = configuration.initiallyMuted
     private var pendingSeek = false
     private var lastTransitionEntryId: String? = null
+    private var lastEndedEvent: Pair<String, Long>? = null
+    private var retryAttempt = 0
+    private var retryJob: Job? = null
 
     private val mutableState = MutableStateFlow(
         AMediaState(
@@ -78,6 +90,8 @@ internal class Media3AMediaController(
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             val entryId = mediaItem?.mediaId
             if (entryId != lastTransitionEntryId) {
+                resetRetryState()
+                lastEndedEvent = null
                 generation += 1L
                 lastTransitionEntryId = entryId
                 mutableState.value = mutableState.value.copy(
@@ -98,6 +112,7 @@ internal class Media3AMediaController(
 
         override fun onPlayerError(error: PlaybackException) {
             val publicError = error.toAMediaError()
+            if (scheduleAutomaticRetry(publicError)) return
             mutableState.value = mutableState.value.copy(
                 status = AMediaPlaybackStatus.Failed,
                 isPlaying = false,
@@ -177,6 +192,48 @@ internal class Media3AMediaController(
         playWhenReady = playWhenReady,
     )
 
+    @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
+    internal fun setPreloadedMedia(
+        entry: AMediaQueueEntry,
+        mediaSource: MediaSource,
+        startPositionMillis: Long,
+        playWhenReady: Boolean,
+    ): AMediaCommandResult {
+        if (startPositionMillis < 0L) {
+            return AMediaCommandResult.Rejected(AMediaCommandRejection.InvalidArgument)
+        }
+        val exoPlayer = player as? ExoPlayer
+            ?: return AMediaCommandResult.Rejected(AMediaCommandRejection.Unsupported)
+        return enqueue {
+            resetRetryState()
+            lastEndedEvent = null
+            generation += 1L
+            desiredPlayWhenReady = playWhenReady
+            lastTransitionEntryId = entry.entryId
+            mutableState.value = mutableState.value.copy(
+                generation = generation,
+                status = AMediaPlaybackStatus.Preparing,
+                queue = listOf(entry),
+                currentIndex = 0,
+                playWhenReady = desiredPlayWhenReady,
+                isPlaying = false,
+                isFirstFrameRendered = false,
+                error = null,
+                tracks = emptyList(),
+                videoSize = null,
+            )
+            mutableProgress.value = AMediaProgress(
+                entryId = entry.entryId,
+                positionMillis = startPositionMillis,
+            )
+            exoPlayer.setMediaSource(mediaSource, startPositionMillis)
+            applyEffectivePlayWhenReady()
+            exoPlayer.prepare()
+            mutableEvents.tryEmit(AMediaEvent.MediaChanged(entry.entryId, generation))
+        }
+    }
+
+    @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
     override fun setQueue(
         entries: List<AMediaQueueEntry>,
         startIndex: Int,
@@ -193,6 +250,8 @@ internal class Media3AMediaController(
             return AMediaCommandResult.Rejected(rejection)
         }
         return enqueue {
+            resetRetryState()
+            lastEndedEvent = null
             generation += 1L
             desiredPlayWhenReady = playWhenReady ?: desiredPlayWhenReady
             lastTransitionEntryId = entries[startIndex].entryId
@@ -213,7 +272,13 @@ internal class Media3AMediaController(
                 entryId = entries[startIndex].entryId,
                 positionMillis = position,
             )
-            player.setMediaItems(entries.map(AMediaQueueEntry::toMedia3Item), startIndex, position)
+            val sources = mediaSourceProvider?.takeIf { player is ExoPlayer }
+                ?.let { provider -> entries.map(provider) }
+            if (sources != null) {
+                (player as ExoPlayer).setMediaSources(sources, startIndex, position)
+            } else {
+                player.setMediaItems(entries.map(AMediaQueueEntry::toMedia3Item), startIndex, position)
+            }
             applyEffectivePlayWhenReady()
             player.prepare()
             mutableEvents.tryEmit(AMediaEvent.MediaChanged(entries[startIndex].entryId, generation))
@@ -221,6 +286,7 @@ internal class Media3AMediaController(
         }
     }
 
+    @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
     override fun add(entry: AMediaQueueEntry, index: Int): AMediaCommandResult {
         val snapshot = state.value
         if (snapshot.queue.any { it.entryId == entry.entryId }) {
@@ -235,7 +301,12 @@ internal class Media3AMediaController(
                 queue = queue,
                 currentIndex = player.currentMediaItemIndex,
             )
-            player.addMediaItem(index, entry.toMedia3Item())
+            val source = mediaSourceProvider?.takeIf { player is ExoPlayer }?.invoke(entry)
+            if (source != null) {
+                (player as ExoPlayer).addMediaSource(index, source)
+            } else {
+                player.addMediaItem(index, entry.toMedia3Item())
+            }
             syncCapabilities()
         }
     }
@@ -282,6 +353,7 @@ internal class Media3AMediaController(
             return AMediaCommandResult.Rejected(AMediaCommandRejection.EmptyQueue)
         }
         return enqueue {
+            resetRetryState()
             mutableState.value = mutableState.value.copy(
                 status = AMediaPlaybackStatus.Preparing,
                 error = null,
@@ -337,6 +409,7 @@ internal class Media3AMediaController(
             return AMediaCommandResult.Rejected(AMediaCommandRejection.EmptyQueue)
         }
         return enqueue {
+            resetRetryState()
             mutableState.value = mutableState.value.copy(
                 status = AMediaPlaybackStatus.Preparing,
                 error = null,
@@ -469,6 +542,7 @@ internal class Media3AMediaController(
     override fun release() {
         if (!released.compareAndSet(false, true)) return
         val releaseAction = {
+            retryJob?.cancel()
             player.removeListener(listener)
             player.clearVideoSurface()
             if (releasePlayer) player.release()
@@ -501,6 +575,8 @@ internal class Media3AMediaController(
     }
 
     private fun clearOnPlayerThread() {
+        resetRetryState()
+        lastEndedEvent = null
         desiredPlayWhenReady = false
         generation += 1L
         lastTransitionEntryId = null
@@ -554,10 +630,15 @@ internal class Media3AMediaController(
             isPlaying = player.isPlaying,
             error = if (status == AMediaPlaybackStatus.Failed) mutableState.value.error else null,
         )
-        if (status == AMediaPlaybackStatus.Ended) {
-            currentEntryId()?.let {
-                mutableEvents.tryEmit(AMediaEvent.PlaybackEnded(it, generation))
-            }
+        if (status == AMediaPlaybackStatus.Ready || status == AMediaPlaybackStatus.Playing) {
+            resetRetryState()
+        }
+        val endedKey = currentEntryId()?.let { it to generation }
+        if (status == AMediaPlaybackStatus.Ended && endedKey != null && endedKey != lastEndedEvent) {
+            lastEndedEvent = endedKey
+            mutableEvents.tryEmit(AMediaEvent.PlaybackEnded(endedKey.first, endedKey.second))
+        } else if (status != AMediaPlaybackStatus.Ended) {
+            lastEndedEvent = null
         }
         updateProgress()
         syncCapabilities()
@@ -578,6 +659,8 @@ internal class Media3AMediaController(
                 canSetTracks = mutableState.value.tracks.isNotEmpty(),
                 hasVideoOutput = mutableState.value.videoSize != null ||
                     queue.any { it.item.metadata.contentType == AMediaContentType.Video },
+                supportsBackgroundPlayback = configuration.supportsBackgroundPlayback,
+                supportsPictureInPicture = configuration.supportsPictureInPicture,
             ),
         )
     }
@@ -596,6 +679,50 @@ internal class Media3AMediaController(
 
     private fun currentEntryId(): String? = player.currentMediaItem?.mediaId
 
+    private fun scheduleAutomaticRetry(error: AMediaError): Boolean {
+        val entryId = currentEntryId() ?: return false
+        val policy = configuration.retryPolicy
+        if (!error.isRecoverable || retryAttempt >= policy.maxAutomaticRetries) return false
+        retryAttempt += 1
+        val attempt = retryAttempt
+        val scheduledGeneration = generation
+        val delayMillis = policy.delayForAttempt(attempt)
+        mutableState.value = mutableState.value.copy(
+            status = AMediaPlaybackStatus.Preparing,
+            isPlaying = false,
+            error = null,
+        )
+        mutableEvents.tryEmit(
+            AMediaEvent.RetryScheduled(entryId, scheduledGeneration, attempt, delayMillis),
+        )
+        retryJob?.cancel()
+        retryJob = scope.launch {
+            delay(delayMillis)
+            onPlayerThread {
+                if (
+                    !released.get() && generation == scheduledGeneration &&
+                    currentEntryId() == entryId
+                ) {
+                    player.prepare()
+                    applyEffectivePlayWhenReady()
+                }
+            }
+        }
+        log(
+            AMediaLogLevel.Warning,
+            "retry scheduled entry=$entryId generation=$scheduledGeneration " +
+                "attempt=$attempt delayMillis=$delayMillis",
+            error.cause,
+        )
+        return true
+    }
+
+    private fun resetRetryState() {
+        retryJob?.cancel()
+        retryJob = null
+        retryAttempt = 0
+    }
+
     private fun findTrack(trackId: String): Pair<Tracks.Group, Int>? {
         player.currentTracks.groups.forEachIndexed { groupIndex, group ->
             for (trackIndex in 0 until group.length) {
@@ -613,7 +740,7 @@ internal class Media3AMediaController(
 }
 
 @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
-private fun AMediaQueueEntry.toMedia3Item(): MediaItem {
+internal fun AMediaQueueEntry.toMedia3Item(): MediaItem {
     val source = item
     val builder = MediaItem.Builder()
         .setMediaId(entryId)
@@ -625,6 +752,7 @@ private fun AMediaQueueEntry.toMedia3Item(): MediaItem {
                 .setArtist(source.metadata.artist)
                 .setAlbumTitle(source.metadata.albumTitle)
                 .setArtworkUri(source.metadata.artworkUri)
+                .setExtras(source.toMedia3Extras())
                 .build(),
         )
 
@@ -648,6 +776,40 @@ private fun AMediaQueueEntry.toMedia3Item(): MediaItem {
         builder.setClippingConfiguration(clippingBuilder.build())
     }
     return builder.build()
+}
+
+private const val AMEDIA_BACKGROUND_POLICY_KEY =
+    "com.ibabyblue.amedia.background_playback_policy"
+private const val AMEDIA_CONTENT_TYPE_KEY = "com.ibabyblue.amedia.content_type"
+private const val AMEDIA_USER_EXTRA_PREFIX = "com.ibabyblue.amedia.extra."
+
+private fun AMediaItem.toMedia3Extras(): Bundle = Bundle().apply {
+    putString(AMEDIA_BACKGROUND_POLICY_KEY, backgroundPlaybackPolicy.name)
+    putString(AMEDIA_CONTENT_TYPE_KEY, metadata.contentType.name)
+    extras.forEach { (key, value) -> putString(AMEDIA_USER_EXTRA_PREFIX + key, value) }
+}
+
+internal fun MediaItem.toAMediaBackgroundPlaybackPolicy(): AMediaBackgroundPlaybackPolicy =
+    mediaMetadata.extras?.getString(AMEDIA_BACKGROUND_POLICY_KEY)
+        ?.let { name -> AMediaBackgroundPlaybackPolicy.entries.firstOrNull { it.name == name } }
+        ?: AMediaBackgroundPlaybackPolicy.Default
+
+internal fun MediaItem.toAMediaContentType(): AMediaContentType =
+    mediaMetadata.extras?.getString(AMEDIA_CONTENT_TYPE_KEY)
+        ?.let { name -> AMediaContentType.entries.firstOrNull { it.name == name } }
+        ?: AMediaContentType.Unknown
+
+@androidx.annotation.OptIn(markerClass = [UnstableApi::class])
+internal fun createDefaultMediaSource(
+    context: Context,
+    entry: AMediaQueueEntry,
+    userAgent: String = "AMedia/0.1",
+): MediaSource {
+    val httpFactory = DefaultHttpDataSource.Factory()
+        .setUserAgent(userAgent)
+        .setDefaultRequestProperties(entry.item.http.headers)
+    val dataSourceFactory = DefaultDataSource.Factory(context.applicationContext, httpFactory)
+    return DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(entry.toMedia3Item())
 }
 
 private fun AMediaSubtitle.toMedia3Subtitle(): MediaItem.SubtitleConfiguration {

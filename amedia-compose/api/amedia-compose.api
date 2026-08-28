@@ -11,6 +11,7 @@ public final class com/ibabyblue/amedia/compose/AMediaContentScale : java/lang/E
 
 public final class com/ibabyblue/amedia/compose/AMediaControllerRememberKt {
 	public static final fun rememberAMediaController (Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Landroidx/compose/runtime/Composer;II)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static final fun rememberAMediaController (Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Lcom/ibabyblue/amedia/core/AMediaAudioAmplitudeConfiguration;Landroidx/compose/runtime/Composer;II)Lcom/ibabyblue/amedia/core/AMediaController;
 }
 
 public final class com/ibabyblue/amedia/compose/AMediaLifecycleBindingKt {

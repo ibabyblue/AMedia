@@ -2,6 +2,16 @@
 
 All notable changes to AMedia are documented in this file.
 
+## 0.2.0 - 2026-08-28
+
+### Added
+
+- Opt-in real decoded-PCM amplitude levels with normalized peak/RMS state for audio and video
+  playback, including cached, preloaded, Compose-owned, and local Session-service controllers.
+- Explicit inactive and unavailable states, entry generation protection, controller-volume
+  handling, shared subscriber-aware computation, host algorithm tests, and real playback device
+  tests.
+
 ## 0.1.0 - 2026-08-26
 
 Initial release.

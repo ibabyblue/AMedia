@@ -83,6 +83,7 @@ public final class com/ibabyblue/amedia/session/AMediaSessionConnectionState$Fai
 
 public abstract class com/ibabyblue/amedia/session/AMediaSessionService : androidx/media3/session/MediaSessionService {
 	public fun <init> ()V
+	protected fun audioAmplitudeConfiguration ()Lcom/ibabyblue/amedia/core/AMediaAudioAmplitudeConfiguration;
 	protected fun configureSession (Landroidx/media3/session/MediaSession$Builder;)Landroidx/media3/session/MediaSession$Builder;
 	protected fun controllerConfiguration ()Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;
 	protected fun createController ()Lcom/ibabyblue/amedia/core/AMediaController;

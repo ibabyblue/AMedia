@@ -12,6 +12,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.ListenableFuture
 import com.ibabyblue.amedia.core.AMediaController
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeConfiguration
 import com.ibabyblue.amedia.core.AMediaBackgroundPlaybackPolicy
 import com.ibabyblue.amedia.core.AMediaContentType
 import com.ibabyblue.amedia.core.AMediaControllerConfiguration
@@ -51,8 +52,15 @@ public abstract class AMediaSessionService : MediaSessionService() {
     protected open fun controllerConfiguration(): AMediaControllerConfiguration =
         AMediaControllerConfiguration(supportsBackgroundPlayback = true)
 
+    /** Return a configuration to enable service-local audio amplitude levels. */
+    protected open fun audioAmplitudeConfiguration(): AMediaAudioAmplitudeConfiguration? = null
+
     protected open fun createController(): AMediaController =
-        AMediaControllerFactory.create(this, controllerConfiguration())
+        AMediaControllerFactory.create(
+            this,
+            controllerConfiguration(),
+            audioAmplitudeConfiguration(),
+        )
 
     protected open fun createSessionCallback(): MediaSession.Callback = object : MediaSession.Callback {}
 

@@ -3,7 +3,7 @@
 AMedia is a Kotlin-first audio and video playback toolkit for Android and Jetpack Compose. It uses
 AndroidX Media3 internally, but exposes stable AMedia-owned models, state, events, and Compose APIs.
 
-The current release is `0.1.0`. The project can publish all library artifacts to Maven Local.
+The current release is `0.2.0`. The project can publish all library artifacts to Maven Local.
 
 ## Why AMedia
 
@@ -12,6 +12,7 @@ The current release is `0.1.0`. The project can publish all library artifacts to
   `AndroidView`.
 - One-player ordered-media preloading for audio, video, or mixed media without screen or business
   assumptions.
+- Opt-in real PCM audio amplitude levels for driving caller-owned playback animation.
 - Optional per-item bypass, read-only, read-through, and cache-only disk policies.
 - Optional MediaSession service for background audio, system controls, notification customization,
   and playback resumption.
@@ -55,9 +56,9 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.ibabyblue:amedia:0.1.0")
-    implementation("io.github.ibabyblue:amedia-compose-material3:0.1.0")
-    implementation("io.github.ibabyblue:amedia-preload:0.1.0")
+    implementation("io.github.ibabyblue:amedia:0.2.0")
+    implementation("io.github.ibabyblue:amedia-compose-material3:0.2.0")
+    implementation("io.github.ibabyblue:amedia-preload:0.2.0")
 }
 ```
 
@@ -93,6 +94,51 @@ fun Video(url: String) {
 Commands are serialized onto the Media3 application looper and return an immediate
 `AMediaCommandResult`. Observe `state`, `progress`, and `events` for authoritative asynchronous
 results. Network errors retry twice by default with bounded exponential backoff.
+
+## Optional audio amplitude levels
+
+Audio amplitude is an opt-in capability in `amedia-core`; it is not a separate artifact. The
+default factories do not install an analyzer, do not force decoded PCM output, and do not perform
+per-buffer analysis. Enable it only for a controller whose UI needs real playback amplitude:
+
+```kotlin
+val controller = AMediaControllerFactory.create(
+    context = context,
+    audioAmplitudeConfiguration = AMediaAudioAmplitudeConfiguration(
+        updatesPerSecond = 20,
+    ),
+)
+val amplitude = requireNotNull(controller.audioAmplitudeSourceOrNull())
+
+lifecycleScope.launch {
+    amplitude.audioAmplitudeState.collect { state ->
+        when (state) {
+            is AMediaAudioAmplitudeState.Active -> {
+                animateWith(peak = state.level.peak, rms = state.level.rms)
+            }
+            is AMediaAudioAmplitudeState.Inactive -> stopAnimation()
+            is AMediaAudioAmplitudeState.Unavailable -> showStaticPlaybackUi()
+        }
+    }
+}
+```
+
+`peak` and `rms` are normalized `0..1` mono levels calculated from all decoded channels after
+Media3 speed and silence-skipping processing. Controller volume is applied, so mute reports
+`Inactive(Muted)`; Android's system output volume is intentionally not included. The default is
+20 updates per second and the supported range is 10–30. `StateFlow` exposes only the latest window,
+so slow collectors skip old levels and multiple collectors share one calculation. PCM aggregation
+also pauses when the flow has no collectors.
+
+The same optional configuration is available on `rememberAMediaController`,
+`AMediaCachedControllerFactory`, and `AMediaPreloadSessionFactory`. Cached and preloaded audio or
+video is measured only while it is actually playing; preload work does not generate levels. A local
+`AMediaSessionService` can opt in by overriding `audioAmplitudeConfiguration()`, but real-time
+levels are deliberately not transported through `AMediaSessionConnection` across Binder.
+
+Amplitude analysis never requests `RECORD_AUDIO`, exposes raw PCM, persists samples, or changes
+playback success. If a device/output pipeline cannot provide analyzable PCM, playback continues and
+the source reports `Unavailable`; callers should degrade to a static or timer-based UI.
 
 ## Audio and video preloading
 
@@ -246,7 +292,7 @@ notification to be visible. Media3 still owns foreground-service timing and syst
 
 AMedia supports progressive media plus Media3 HLS and DASH, external subtitles, Widevine-style DRM
 configuration, queues, and streaming cache. Offline downloads, casting, ads, and a MediaLibrary
-catalog service are intentionally outside `0.1.0`.
+catalog service are intentionally outside the current scope.
 
 See [architecture](docs/architecture.md) for invariants and [QA](docs/qa.md) for release checks.
 

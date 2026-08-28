@@ -43,6 +43,7 @@ internal class Media3AMediaController(
     internal val player: Player,
     private val configuration: AMediaControllerConfiguration,
     private val releasePlayer: Boolean,
+    internal val audioAmplitudeSource: AMediaAudioAmplitudeRuntime? = null,
     private val mediaSourceProvider: ((AMediaQueueEntry) -> MediaSource)? = null,
 ) : AMediaController {
     private val controllerId = UUID.randomUUID().toString()
@@ -157,6 +158,7 @@ internal class Media3AMediaController(
     }
 
     init {
+        audioAmplitudeSource?.bind(state)
         onPlayerThread {
             player.addListener(listener)
             player.volume = if (muted) 0f else unmutedVolume
@@ -543,6 +545,7 @@ internal class Media3AMediaController(
         if (!released.compareAndSet(false, true)) return
         val releaseAction = {
             retryJob?.cancel()
+            audioAmplitudeSource?.release()
             player.removeListener(listener)
             player.clearVideoSurface()
             if (releasePlayer) player.release()

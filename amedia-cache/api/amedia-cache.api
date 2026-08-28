@@ -175,6 +175,8 @@ public final class com/ibabyblue/amedia/cache/AMediaCachedControllerFactory {
 	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;)Lcom/ibabyblue/amedia/core/AMediaController;
 	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;)Lcom/ibabyblue/amedia/core/AMediaController;
 	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static final fun create (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaAudioAmplitudeConfiguration;)Lcom/ibabyblue/amedia/core/AMediaController;
 	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaController;
+	public static synthetic fun create$default (Landroid/content/Context;Lcom/ibabyblue/amedia/cache/AMediaCache;Lcom/ibabyblue/amedia/core/AMediaControllerConfiguration;Ljava/lang/String;Lcom/ibabyblue/amedia/core/AMediaAudioAmplitudeConfiguration;ILjava/lang/Object;)Lcom/ibabyblue/amedia/core/AMediaController;
 }
 

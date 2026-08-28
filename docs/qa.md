@@ -1,4 +1,4 @@
-# AMedia 0.1.0 QA checklist
+# AMedia 0.2.0 QA checklist
 
 ## Automated gates
 
@@ -41,6 +41,28 @@ module with its checked-in ABI file.
 - Use `ContinueAudio`; expect audio to continue with video output detached.
 - Kill and recreate the service with a test resumption provider; expect queue index and position to
   restore.
+
+## Audio amplitude
+
+- Create every controller type without amplitude configuration; expect
+  `audioAmplitudeSourceOrNull()` to return `null` and the normal Media3 output path to remain in use.
+- Opt in at 20 Hz and play local audio; expect normalized peak/RMS `Active` levels with the current
+  entry ID and generation.
+- Repeat with a video's audio track, cached audio, and preloaded audio; expect levels only after
+  actual playback begins, never from `update` or `hint` alone.
+- Change speed and enable silence skipping; expect levels from the post-processing PCM stream.
+- Pause, buffer, mute, end, replace media, fail playback, and release; expect the matching
+  `Inactive` reason and no stale generation to reactivate.
+- Subscribe with multiple fast and slow collectors; expect one shared computation and conflated
+  latest-state behavior. Remove all collectors; expect PCM aggregation work to stop.
+- Exercise a device/output path that cannot expose decoded PCM; expect `Unavailable` while playback
+  continues normally.
+- Verify the feature requires no recording permission, exposes no raw PCM, and does not reflect
+  Android system volume.
+- Verify a local Session service may opt in, while its remote `AMediaSessionConnection` does not
+  expose real-time amplitude.
+- Run `:example:connectedDebugAndroidTest` on API 23+ before release; it covers default-off, audio,
+  video/speed, cache/write-through, and preload/playback paths.
 
 ## Cache and network
 

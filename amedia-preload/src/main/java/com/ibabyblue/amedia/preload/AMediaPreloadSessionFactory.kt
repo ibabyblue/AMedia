@@ -10,6 +10,7 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.RenderersFactory
 import androidx.media3.exoplayer.analytics.PlayerId
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.preload.DefaultPreloadManager
@@ -17,6 +18,7 @@ import androidx.media3.exoplayer.source.preload.TargetPreloadStatusControl
 import com.ibabyblue.amedia.cache.AMediaCache
 import com.ibabyblue.amedia.cache.AMediaCacheMedia3Interop
 import com.ibabyblue.amedia.core.AMediaAudioPolicy
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeConfiguration
 import com.ibabyblue.amedia.core.AMediaCommandRejection
 import com.ibabyblue.amedia.core.AMediaCommandResult
 import com.ibabyblue.amedia.core.AMediaController
@@ -43,6 +45,21 @@ public object AMediaPreloadSessionFactory {
         cache = null,
         configuration,
         controllerConfiguration,
+        audioAmplitudeConfiguration = null,
+    )
+
+    @JvmStatic
+    public fun create(
+        context: Context,
+        configuration: AMediaPreloadConfiguration = AMediaPreloadConfiguration(),
+        controllerConfiguration: AMediaControllerConfiguration = AMediaControllerConfiguration(),
+        audioAmplitudeConfiguration: AMediaAudioAmplitudeConfiguration?,
+    ): AMediaPreloadSession = createInternal(
+        context,
+        cache = null,
+        configuration,
+        controllerConfiguration,
+        audioAmplitudeConfiguration,
     )
 
     @JvmStatic
@@ -57,6 +74,22 @@ public object AMediaPreloadSessionFactory {
         cache,
         configuration,
         controllerConfiguration,
+        audioAmplitudeConfiguration = null,
+    )
+
+    @JvmStatic
+    public fun create(
+        context: Context,
+        cache: AMediaCache,
+        configuration: AMediaPreloadConfiguration = AMediaPreloadConfiguration(),
+        controllerConfiguration: AMediaControllerConfiguration = AMediaControllerConfiguration(),
+        audioAmplitudeConfiguration: AMediaAudioAmplitudeConfiguration?,
+    ): AMediaPreloadSession = createInternal(
+        context,
+        cache,
+        configuration,
+        controllerConfiguration,
+        audioAmplitudeConfiguration,
     )
 
     @OptIn(ExperimentalAMediaApi::class)
@@ -65,6 +98,7 @@ public object AMediaPreloadSessionFactory {
         cache: AMediaCache?,
         configuration: AMediaPreloadConfiguration,
         controllerConfiguration: AMediaControllerConfiguration,
+        audioAmplitudeConfiguration: AMediaAudioAmplitudeConfiguration?,
     ): AMediaPreloadSession {
         val appContext = context.applicationContext
         val cacheLease = cache?.let(AMediaCacheMedia3Interop::retain)
@@ -76,8 +110,13 @@ public object AMediaPreloadSessionFactory {
                     configuration.maxPreloadBufferBytes,
                 )
                 .build()
+            val amplitudeRenderersFactory: RenderersFactory? =
+                audioAmplitudeConfiguration?.let {
+                    AMediaMedia3Interop.audioAmplitudeRenderersFactory(appContext, it)
+                }
             val builder = DefaultPreloadManager.Builder(appContext, targetControl)
                 .setLoadControl(loadControl)
+            amplitudeRenderersFactory?.let(builder::setRenderersFactory)
             val handlesAudioFocus = controllerConfiguration.audioPolicy == AMediaAudioPolicy.Media
             val exoPlayerBuilder = ExoPlayer.Builder(appContext)
                 .setAudioAttributes(
@@ -119,6 +158,7 @@ public object AMediaPreloadSessionFactory {
                 configuration = controllerConfiguration,
                 releasePlayer = false,
                 mediaSourceProvider = mediaSourceProvider,
+                audioAmplitudeRenderersFactory = amplitudeRenderersFactory,
             )
             return DefaultAMediaPreloadSession(
                 player,

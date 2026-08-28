@@ -1,9 +1,16 @@
+@file:androidx.annotation.OptIn(
+    markerClass = [androidx.media3.common.util.UnstableApi::class],
+)
+
 package com.ibabyblue.amedia.core.interop
 
 import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.RenderersFactory
 import androidx.media3.exoplayer.source.MediaSource
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeConfiguration
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeRenderersFactory
 import com.ibabyblue.amedia.core.AMediaBackgroundPlaybackPolicy
 import com.ibabyblue.amedia.core.AMediaCommandResult
 import com.ibabyblue.amedia.core.AMediaContentType
@@ -12,6 +19,7 @@ import com.ibabyblue.amedia.core.AMediaControllerConfiguration
 import com.ibabyblue.amedia.core.AMediaQueueEntry
 import com.ibabyblue.amedia.core.ExperimentalAMediaApi
 import com.ibabyblue.amedia.core.Media3AMediaController
+import com.ibabyblue.amedia.core.audioAmplitudeRuntime
 import com.ibabyblue.amedia.core.createDefaultMediaSource
 import com.ibabyblue.amedia.core.toMedia3Item
 import com.ibabyblue.amedia.core.toAMediaBackgroundPlaybackPolicy
@@ -26,11 +34,51 @@ public object AMediaMedia3Interop {
         configuration: AMediaControllerConfiguration = AMediaControllerConfiguration(),
         releasePlayer: Boolean = false,
         mediaSourceProvider: ((AMediaQueueEntry) -> MediaSource)? = null,
-    ): AMediaController = Media3AMediaController(
+    ): AMediaController = wrapInternal(
         player,
         configuration,
         releasePlayer,
         mediaSourceProvider,
+        audioAmplitudeRenderersFactory = null,
+    )
+
+    @JvmStatic
+    public fun wrap(
+        player: Player,
+        configuration: AMediaControllerConfiguration = AMediaControllerConfiguration(),
+        releasePlayer: Boolean = false,
+        mediaSourceProvider: ((AMediaQueueEntry) -> MediaSource)? = null,
+        audioAmplitudeRenderersFactory: RenderersFactory?,
+    ): AMediaController = wrapInternal(
+        player,
+        configuration,
+        releasePlayer,
+        mediaSourceProvider,
+        audioAmplitudeRenderersFactory,
+    )
+
+    private fun wrapInternal(
+        player: Player,
+        configuration: AMediaControllerConfiguration,
+        releasePlayer: Boolean,
+        mediaSourceProvider: ((AMediaQueueEntry) -> MediaSource)?,
+        audioAmplitudeRenderersFactory: RenderersFactory?,
+    ): AMediaController = Media3AMediaController(
+        player,
+        configuration,
+        releasePlayer,
+        audioAmplitudeRuntime(audioAmplitudeRenderersFactory),
+        mediaSourceProvider,
+    )
+
+    /** Creates the Media3 renderer seam required for opt-in decoded PCM amplitude levels. */
+    @JvmStatic
+    public fun audioAmplitudeRenderersFactory(
+        context: Context,
+        configuration: AMediaAudioAmplitudeConfiguration,
+    ): RenderersFactory = AMediaAudioAmplitudeRenderersFactory(
+        context.applicationContext,
+        configuration,
     )
 
     @JvmStatic

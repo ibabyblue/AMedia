@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.util.Rational
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
@@ -46,6 +49,8 @@ import com.ibabyblue.amedia.compose.AMediaLifecycleBinding
 import com.ibabyblue.amedia.compose.AMediaVideo
 import com.ibabyblue.amedia.compose.material3.AMediaMaterialPlayer
 import com.ibabyblue.amedia.core.AMediaCachePolicy
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeConfiguration
+import com.ibabyblue.amedia.core.AMediaAudioAmplitudeState
 import com.ibabyblue.amedia.core.AMediaContentType
 import com.ibabyblue.amedia.core.AMediaController
 import com.ibabyblue.amedia.core.AMediaControllerConfiguration
@@ -54,6 +59,7 @@ import com.ibabyblue.amedia.core.AMediaMetadata
 import com.ibabyblue.amedia.core.AMediaQueueEntry
 import com.ibabyblue.amedia.core.AMediaRepeatMode
 import com.ibabyblue.amedia.core.AMediaSubtitle
+import com.ibabyblue.amedia.core.audioAmplitudeSourceOrNull
 import com.ibabyblue.amedia.preload.AMediaPreloadSessionFactory
 import com.ibabyblue.amedia.session.AMediaSessionConnection
 import com.ibabyblue.amedia.session.AMediaSessionConnectionState
@@ -70,7 +76,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class DemoPage { Player, Preload, Session, Cache }
+private enum class DemoPage { Player, Amplitude, Preload, Session, Cache }
 
 @Composable
 private fun AMediaExampleApp() {
@@ -91,6 +97,7 @@ private fun AMediaExampleApp() {
             Box(Modifier.fillMaxSize()) {
                 when (pages[selected]) {
                     DemoPage.Player -> ForegroundPlayerDemo()
+                    DemoPage.Amplitude -> AudioAmplitudeDemo()
                     DemoPage.Preload -> PreloadDemo()
                     DemoPage.Session -> SessionDemo()
                     DemoPage.Cache -> CachedPlayerDemo()
@@ -98,6 +105,26 @@ private fun AMediaExampleApp() {
             }
         }
     }
+}
+
+@Composable
+private fun AudioAmplitudeDemo() {
+    val context = LocalContext.current
+    val controller = com.ibabyblue.amedia.compose.rememberAMediaController(
+        audioAmplitudeConfiguration = AMediaAudioAmplitudeConfiguration(),
+    )
+    AMediaLifecycleBinding(controller)
+    LaunchedEffect(controller) {
+        controller.setMedia(
+            sampleAudio(context.packageName, "PCM-derived amplitude"),
+            playWhenReady = false,
+        )
+    }
+    AudioController(
+        controller = controller,
+        title = "Local audio amplitude",
+        showsAmplitude = true,
+    )
 }
 
 @Composable
@@ -131,6 +158,7 @@ private fun PreloadDemo() {
             controllerConfiguration = AMediaControllerConfiguration(
                 repeatMode = AMediaRepeatMode.One,
             ),
+            audioAmplitudeConfiguration = AMediaAudioAmplitudeConfiguration(),
         )
     }
     DisposableEffect(preloadSession) { onDispose(preloadSession::release) }
@@ -180,6 +208,10 @@ private fun PreloadDemo() {
                     } else {
                         DemoPoster("Feed video ${entryIndex + 1}", Color.Transparent)
                     }
+                    AudioAmplitudeIndicator(
+                        controller = preloadSession.playback,
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(24.dp),
+                    )
                 }
             }
             else -> DemoPoster("Image item owned by the host", Color(0xFF43321E))
@@ -220,7 +252,13 @@ private fun CachedPlayerDemo() {
     val cache = remember {
         AMediaCacheFactory.create(context, AMediaCacheConfiguration(directoryName = "amedia-example"))
     }
-    val controller = remember(cache) { AMediaCachedControllerFactory.create(context, cache) }
+    val controller = remember(cache) {
+        AMediaCachedControllerFactory.create(
+            context,
+            cache,
+            audioAmplitudeConfiguration = AMediaAudioAmplitudeConfiguration(),
+        )
+    }
     DisposableEffect(controller, cache) {
         onDispose {
             controller.release()
@@ -242,12 +280,20 @@ private fun CachedPlayerDemo() {
             modifier = Modifier.fillMaxWidth().weight(1f),
             shutter = { DemoPoster("Read-through cache", Color(0xFF172F4A)) },
         )
+        AudioAmplitudeIndicator(
+            controller = controller,
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+        )
         Text("Cache size: ${cache.sizeBytes / 1024L} KiB", Modifier.padding(16.dp))
     }
 }
 
 @Composable
-private fun AudioController(controller: AMediaController, title: String) {
+private fun AudioController(
+    controller: AMediaController,
+    title: String,
+    showsAmplitude: Boolean = false,
+) {
     val state by controller.state.collectAsStateWithLifecycle()
     val progress by controller.progress.collectAsStateWithLifecycle()
     Column(
@@ -258,6 +304,9 @@ private fun AudioController(controller: AMediaController, title: String) {
         Text(title, style = MaterialTheme.typography.headlineSmall)
         Text(state.currentEntry?.item?.metadata?.title.orEmpty())
         Text("${progress.positionMillis / 1_000}s / ${(progress.durationMillis ?: 0L) / 1_000}s")
+        if (showsAmplitude) {
+            AudioAmplitudeIndicator(controller, Modifier.padding(vertical = 24.dp))
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { controller.skipToPrevious() }) { Text("Previous") }
             Button(onClick = { if (state.isPlaying) controller.pause() else controller.play() }) {
@@ -265,6 +314,49 @@ private fun AudioController(controller: AMediaController, title: String) {
             }
             Button(onClick = { controller.skipToNext() }) { Text("Next") }
         }
+    }
+}
+
+@Composable
+private fun AudioAmplitudeIndicator(
+    controller: AMediaController,
+    modifier: Modifier = Modifier,
+) {
+    val source = remember(controller) { controller.audioAmplitudeSourceOrNull() }
+    if (source == null) {
+        Text("Audio amplitude disabled", modifier = modifier)
+        return
+    }
+    val state by source.audioAmplitudeState.collectAsStateWithLifecycle()
+    val level = (state as? AMediaAudioAmplitudeState.Active)?.level
+    val animatedRms by animateFloatAsState(
+        targetValue = level?.rms ?: 0f,
+        label = "audio-amplitude-rms",
+    )
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Box(
+            Modifier
+                .size((48f + animatedRms * 72f).dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary.copy(
+                        alpha = 0.35f + animatedRms * 0.65f,
+                    ),
+                    shape = CircleShape,
+                ),
+        )
+        Text(
+            when (val current = state) {
+                is AMediaAudioAmplitudeState.Active ->
+                    "Peak %.2f  RMS %.2f".format(current.level.peak, current.level.rms)
+                is AMediaAudioAmplitudeState.Inactive -> "Inactive: ${current.reason}"
+                is AMediaAudioAmplitudeState.Unavailable -> "Unavailable: ${current.reason}"
+            },
+            style = MaterialTheme.typography.labelMedium,
+        )
     }
 }
 

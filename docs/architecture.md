@@ -33,6 +33,28 @@ work.
 
 Progress polling runs only while `progress` has subscribers. The default interval is 250 ms.
 
+## Audio amplitude invariant
+
+Audio amplitude is a nullable controller capability, not part of the mandatory controller state.
+Factories install the custom Media3 renderer/audio-sink chain only when passed an
+`AMediaAudioAmplitudeConfiguration`; the default `null` path preserves Media3's normal output
+selection and has no buffer-analysis work.
+
+The analyzer observes decoded PCM after Media3 silence skipping and speed processing, aggregates
+all channels into normalized mono peak and RMS windows, and applies the controller volume. It emits
+only conflated `StateFlow` state and performs aggregation only while that flow is observed. One
+runtime belongs to one controller, so all observers share the calculation. Entry identity plus
+controller generation prevents a buffer from an earlier item becoming state for a replacement.
+
+Analysis is observational: unsupported PCM/output reports `Unavailable` and never fails playback.
+Paused, buffering, muted, ended, failed, released, and no-audio conditions are explicit `Inactive`
+states. Raw PCM, FFT/frequency data, persistence, logging, recording permission, system-volume
+tracking, and animation policy are outside the capability.
+
+Cached and preloaded playback use the same renderer chain. Preloading only prepares data and does
+not produce amplitude because it does not render to the audio sink. A Session service may analyze
+its local player, but high-frequency levels are not part of the remote Binder controller contract.
+
 ## Preload invariant
 
 An `AMediaPreloadSession` owns exactly one ExoPlayer and one `DefaultPreloadManager`, created by the
@@ -77,7 +99,7 @@ Background behavior is encoded into Media3 metadata so it survives the MediaSess
 The service observes the application process lifecycle and applies the active item's policy. Compose
 lifecycle binding uses the same policy and the controller's background capability.
 
-## Non-goals for 0.1.0
+## Non-goals
 
 - Offline download orchestration and licenses
 - Cast or route selection

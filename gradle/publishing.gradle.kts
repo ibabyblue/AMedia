@@ -4,7 +4,7 @@ import org.gradle.api.publish.maven.MavenPublication
 apply(plugin = "maven-publish")
 
 group = "io.github.ibabyblue"
-version = "0.1.0"
+version = "0.1.1"
 
 afterEvaluate {
     extensions.configure<PublishingExtension> {

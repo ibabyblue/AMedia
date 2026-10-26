@@ -38,7 +38,14 @@ Progress polling runs only while `progress` has subscribers. The default interva
 An `AMediaPreloadSession` owns exactly one ExoPlayer and one `DefaultPreloadManager`, created by the
 same Media3 builder. Ordered entries may be audio, video, or mixed media. `hint` changes preload
 priority without starting playback; `play` obtains the preloaded source and activates it. Total
-preload memory is bounded by configuration.
+preload buffer allocation has a configurable budget; it is not a cap on all player/process memory.
+
+After an `update` has executed on the player looper, the manager holds only the submitted entry set.
+Eviction and replacement must remove by the stored MediaItem, not the original MediaSource: Media3
+wraps sources before storing them. Reordering also replaces sources and must release the old
+wrappers even when the MediaItem is equal. Unchanged entry/index pairs retain their wrappers.
+The active player can still own an evicted source until it switches media or is released;
+evicting a preload entry must not abruptly stop playback.
 
 The module does not know pages, feeds, visible indexes, pagination, connectivity policy, or
 application models. UI state holders map UI intent to entry IDs; ViewModels and repositories own
@@ -77,7 +84,7 @@ Background behavior is encoded into Media3 metadata so it survives the MediaSess
 The service observes the application process lifecycle and applies the active item's policy. Compose
 lifecycle binding uses the same policy and the controller's background capability.
 
-## Non-goals for 0.1.0
+## Non-goals for 0.1.x
 
 - Offline download orchestration and licenses
 - Cast or route selection

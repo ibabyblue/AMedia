@@ -3,7 +3,8 @@
 AMedia is a Kotlin-first audio and video playback toolkit for Android and Jetpack Compose. It uses
 AndroidX Media3 internally, but exposes stable AMedia-owned models, state, events, and Compose APIs.
 
-The current release is `0.1.0`. The project can publish all library artifacts to Maven Local.
+This maintenance branch releases `0.1.1`, an API-compatible patch for `0.1.0`.
+It does not include the separate `0.2.x` audio-amplitude feature line.
 
 ## Why AMedia
 
@@ -41,6 +42,19 @@ The current release is `0.1.0`. The project can publish all library artifacts to
 | `amedia` | Convenience dependency for core plus unstyled Compose playback |
 | `example` | Runnable foreground, preload, cache, subtitle, PiP and Session examples |
 
+## JitPack installation
+
+```kotlin
+repositories { maven { url = uri("https://jitpack.io") } }
+dependencies {
+    implementation("com.github.ibabyblue.AMedia:amedia:0.1.1")
+    implementation("com.github.ibabyblue.AMedia:amedia-preload:0.1.1")
+    implementation("com.github.ibabyblue.AMedia:amedia-cache:0.1.1")
+}
+```
+
+Keep all AMedia artifacts on the same version.
+
 ## Local installation
 
 ```bash
@@ -55,9 +69,9 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.ibabyblue:amedia:0.1.0")
-    implementation("io.github.ibabyblue:amedia-compose-material3:0.1.0")
-    implementation("io.github.ibabyblue:amedia-preload:0.1.0")
+    implementation("io.github.ibabyblue:amedia:0.1.1")
+    implementation("io.github.ibabyblue:amedia-compose-material3:0.1.1")
+    implementation("io.github.ibabyblue:amedia-preload:0.1.1")
 }
 ```
 
@@ -117,6 +131,13 @@ The default technical budget loads 3 seconds forward, 1 second backward, selects
 distance 2, and caps total preload buffers at 32 MiB. `hint` only reprioritizes work; `play` switches
 the shared player to the preloaded source. The application owns pagination, network/data-saver
 rules, active-page selection, and playback-position persistence.
+
+`update` replaces the managed set: entries omitted from the next list are evicted, changed or
+reordered entries release their previous preload resources, and unchanged entries at the same
+index retain their sources. Keep the submitted list bounded (for example, the current item and
+its two neighbors). A duration/byte preload budget does not bound the number of managed sources.
+Removing the currently playing entry from the preload set does not itself stop playback; the
+player retains its own ownership until playback changes or the session is released.
 
 ## Optional cache
 
@@ -246,9 +267,10 @@ notification to be visible. Media3 still owns foreground-service timing and syst
 
 AMedia supports progressive media plus Media3 HLS and DASH, external subtitles, Widevine-style DRM
 configuration, queues, and streaming cache. Offline downloads, casting, ads, and a MediaLibrary
-catalog service are intentionally outside `0.1.0`.
+catalog service are intentionally outside `0.1.1`.
 
-See [architecture](docs/architecture.md) for invariants and [QA](docs/qa.md) for release checks.
+See [architecture](docs/architecture.md) for invariants, [QA](docs/qa.md) for release checks,
+and [publishing](docs/publishing.md) for the maintenance release procedure.
 
 ## Verification
 

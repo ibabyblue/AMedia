@@ -1,4 +1,4 @@
-# AMedia 0.1.0 QA checklist
+# AMedia 0.1.1 QA checklist
 
 ## Automated gates
 
@@ -6,6 +6,7 @@ Run from the repository root:
 
 ```bash
 ./gradlew test lint apiCheck assembleRelease :example:assembleDebug
+./gradlew :amedia-preload:connectedDebugAndroidTest :amedia-cache:connectedDebugAndroidTest :example:connectedDebugAndroidTest
 ```
 
 Expected: all tasks succeed without an Android Lint baseline. `apiCheck` must compare every library
@@ -21,6 +22,17 @@ module with its checked-in ABI file.
 - Rotate or recreate the activity; expect no leaked player and no duplicate audio.
 
 ## Generic preloading
+
+- Run `AMediaPreloadRetentionTest`: advancing 40 three-entry windows must retain 3 managed
+  sources, not 42. Changed-URI replacements must retain one source, and reordering must release
+  replaced wrappers even when the manager count is unchanged. Empty update must leave zero.
+- Run `PreloadOwnershipPlaybackTest` against the example's local videos: active playback survives
+  preload eviction, 20 successive switches keep loader threads bounded, and release restores the
+  thread baseline.
+- Use the example or consuming app to play local audio/video while advancing a bounded window.
+  Evicting the active entry must preserve playback until a new entry is selected. After release,
+  loader threads and retained sources must return to baseline.
+
 
 - Update an ordered video set, hint the next entry, then play it; expect one shared player and the
   preloaded MediaSource to be reused.

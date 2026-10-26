@@ -205,7 +205,9 @@ private class DefaultAMediaPreloadSession(
                 val record = if (existing != null && existing.index == index && existing.entry == entry) {
                     existing
                 } else {
-                    existing?.let { preloadManager.remove(it.source) }
+                    // Media3 stores a PreloadMediaSource wrapper, not the original source.
+                    // Remove by MediaItem so replacement also releases the previous wrapper.
+                    existing?.let { preloadManager.remove(it.mediaItem) }
                     val source = mediaSourceProvider(entry)
                     val mediaItem = source.mediaItem
                     preloadManager.add(source, index)
@@ -214,7 +216,7 @@ private class DefaultAMediaPreloadSession(
                 next[entry.entryId] = record
             }
             previous.forEach { (entryId, record) ->
-                if (entryId !in next) preloadManager.remove(record.source)
+                if (entryId !in next) preloadManager.remove(record.mediaItem)
             }
             records = next
             val anchorEntryId = mutableState.value.anchorEntryId?.takeIf(next::containsKey)
